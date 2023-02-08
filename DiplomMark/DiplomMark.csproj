@@ -1,0 +1,74 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\correct.png" />
+    <None Remove="Resources\ellipseIcon.png" />
+    <None Remove="Resources\ellipseSelect.png" />
+    <None Remove="Resources\InconRect.png" />
+    <None Remove="Resources\ju.jpg" />
+    <None Remove="Resources\logo.png" />
+    <None Remove="Resources\logo2.png" />
+    <None Remove="Resources\RectangleIcon.png" />
+    <None Remove="Resources\remove.png" />
+    <None Remove="Resources\save.png" />
+    <None Remove="Resources\select.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SplashScreen Include="Resources\select.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\save.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\remove.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\RectangleIcon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\logo2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\ju.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\InconRect.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspose.HTML" Version="23.2.0" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
+    <PackageReference Include="IronPython" Version="3.4.0" />
+    <PackageReference Include="Microsoft-Windows10-APICodePack-Shell" Version="1.1.8" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Numpy" Version="3.11.1.31" />
+    <PackageReference Include="Python.Included" Version="3.11.1" />
+    <PackageReference Include="pythonnet" Version="3.0.1" />
+    <PackageReference Include="Yolov5Net" Version="1.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\correct.png" />
+    <Resource Include="Resources\ellipseIcon.png" />
+    <Resource Include="Resources\ellipseSelect.png" />
+  </ItemGroup>
+
+</Project>
