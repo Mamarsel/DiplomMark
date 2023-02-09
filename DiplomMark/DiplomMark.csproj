@@ -5,6 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -56,13 +57,17 @@
   <ItemGroup>
     <PackageReference Include="Aspose.HTML" Version="23.2.0" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
-    <PackageReference Include="IronPython" Version="3.4.0" />
     <PackageReference Include="Microsoft-Windows10-APICodePack-Shell" Version="1.1.8" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.13.1" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.13.1" />
+    <PackageReference Include="MinVer" Version="4.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="Numpy" Version="3.11.1.31" />
     <PackageReference Include="Python.Included" Version="3.11.1" />
     <PackageReference Include="pythonnet" Version="3.0.1" />
-    <PackageReference Include="Yolov5Net" Version="1.0.9" />
+    <PackageReference Include="Yolov8.Net" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>

@@ -17,16 +17,21 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Yolov5Net.Scorer.Models;
-using Yolov5Net.Scorer;
 using Figure = DiplomMark.Classes.Figure;
 using Image = System.Drawing.Image;
 using Pen = System.Drawing.Pen;
 using Color = System.Windows.Media.Color;
-
+using DiplomMark.Classes.Yolo.Extentions;
+using DiplomMark.Classes.Yolo.Models;
 using Rectangle = System.Windows.Shapes.Rectangle;
 using ColorConverter = System.Windows.Media.ColorConverter;
 using Point = System.Windows.Point;
+using Aspose.Html.Dom.Svg;
+using System.Reflection;
+
+using Microsoft.VisualBasic.ApplicationServices;
+using System.Windows.Media.Media3D;
+using System.Drawing.Drawing2D;
 
 namespace DiplomMark.Pages
 {
@@ -69,7 +74,8 @@ namespace DiplomMark.Pages
             {
                 paths.Add(fi.FullName);
             }
-            ImagePreview.DataContext = paths[counterImage - 1];
+            var img = ImageController.FromFile(paths[counterImage - 1]);
+            ImagePreview.Source = correctImage(paths, counter);
             MaxPhotosLabel.Content = paths.Count;
             totalCount = paths.Count;
             totalPage = totalCount / itemPerPage;
@@ -87,6 +93,24 @@ namespace DiplomMark.Pages
             }
             Thumbnails.SelectedIndex = 0;
         }
+        private BitmapSource correctImage(List<string> paths, int counterImage)
+        {
+            try
+            {
+                var img = ImageController.FromFile(paths[counterImage - 1]);
+                double dpi = 96;
+                int width = img.PixelWidth;
+                int height = img.PixelHeight;
+
+                int stride = width * 4; // 4 bytes per pixel
+                byte[] pixelData = new byte[stride * height];
+                img.CopyPixels(pixelData, stride, 0);
+
+                BitmapSource bmpSource = BitmapSource.Create(width, height, dpi, dpi, PixelFormats.Bgra32, null, pixelData, stride);
+                return bmpSource;
+            }
+            catch { return null; }
+        }
         public MainPage(List<SelectImages> images)
         {
 
@@ -94,13 +118,18 @@ namespace DiplomMark.Pages
             CanvasDrawer.SelectedShape = rect;
             _images = images;
 
+            Cnv.Height = ImagePreview.Height;
+            Cnv.Width = ImagePreview.Width;
+
+
             MyCommand.InputGestures.Add(new KeyGesture(Key.Z, ModifierKeys.Control));
             #region Пагинирование
             foreach (var fi in _images)
             {
                 paths.Add(fi.FileURL);
             }
-            ImagePreview.DataContext = paths[counterImage - 1];
+            ImagePreview.Source = ImageController.FromFile(paths[counterImage - 1]);
+        
             MaxPhotosLabel.Content = paths.Count;
             totalCount = paths.Count;
             totalPage = totalCount / itemPerPage;
@@ -206,7 +235,7 @@ namespace DiplomMark.Pages
                     Thumbnails.SelectedIndex = 0;
                 }
                 CounterLabel.Content = counterImage;
-                ImagePreview.DataContext = paths[counterImage - 1];
+                ImagePreview.Source = correctImage(paths, counterImage);
             }
         }
         private void BackLabel_MouseDown(object sender, MouseButtonEventArgs e)
@@ -226,7 +255,7 @@ namespace DiplomMark.Pages
                     Thumbnails.SelectedIndex = 9;
                 }
                 CounterLabel.Content = counterImage;
-                ImagePreview.DataContext = paths[counterImage - 1];
+                ImagePreview.Source = correctImage(paths, counterImage);
 
             }
         }
@@ -411,7 +440,7 @@ namespace DiplomMark.Pages
                 counterImage = Thumbnails.SelectedIndex + 1 + currentPageIndex * 10;
                 CounterLabel.Content = counterImage.ToString();
                 Cnv.Children.Clear();
-                ImagePreview.DataContext = thumbnails;
+                ImagePreview.Source = correctImage(paths, counterImage);
                 rectangleShapesInPhoto = TransformFigureTo.ListRectangleInPhoto(ShapeContainer.list, paths, counterImage);
                 var listrect = TransformFigureTo.ListToPrintShapes(rectangleShapesInPhoto);
                 PrintImagesInPhoto(rectangleShapesInPhoto, listrect);
@@ -541,29 +570,47 @@ namespace DiplomMark.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            using var image = Image.FromFile(paths[counterImage]);
+            
+            using var yolo = new Classes.Yolo.Models.Yolov8Net(Directory.GetParent( Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName).FullName + "\\Assets\\Weights\\yolov8m.onnx");
 
-            using var scorer = new YoloScorer<YoloCocoP5Model>("Assets/Weights/yolov5s.onnx");
+            // Provide an input image.  Image will be resized to model input if needed.
+            System.Drawing.Image img = System.Drawing.Image.FromFile(paths[counterImage - 1]);
+            using var image = Image.FromFile(paths[counterImage-1]);
+            var predictions = yolo.Predict(img);
+            
+           
+            
 
-            List<YoloPrediction> predictions = scorer.Predict(image);
-
-            using var graphics = Graphics.FromImage(image);
-
-            foreach (var prediction in predictions) // iterate predictions to draw results
+            // Draw your boxes
+            using var graphics = Graphics.FromImage(img);
+            foreach (var pred in predictions)
             {
-                double score = Math.Round(prediction.Score, 2);
+                var originalImageHeight = img.Height;
+                var originalImageWidth = img.Width;
 
-                graphics.DrawRectangles(new Pen(prediction.Label.Color, 1),
-                    new[] { prediction.Rectangle });
+                var x = Math.Max(pred.Rectangle.X, 0);
+                var y = Math.Max(pred.Rectangle.Y, 0);
+                var width = Math.Min(originalImageWidth - x, pred.Rectangle.Width);
+                var height = Math.Min(originalImageHeight - y, pred.Rectangle.Height);
 
-                var (x, y) = (prediction.Rectangle.X - 3, prediction.Rectangle.Y - 23);
+                var qwe = ImagePreview.DataContext;
+              
+                var name = pred.Label.Name.Replace(" ", "_");
+                Rectangle rect = new Rectangle();
+                Canvas.SetLeft(rect, x);
+                Canvas.SetTop(rect, y);
+                rect.Width = width;
+                rect.Height = height;
+                rect.Opacity = 0.6;
+                rect.Fill = new SolidColorBrush(Colors.Red);
+                rect.Name = name;
+                Cnv.Children.Add(rect);
+                ShapeContainer.AddFigure(RectangleShape.RectangleToFigure(rect, Math.Round(x, 4), Math.Round(y, 4), paths[counterImage], rect.Name, rect.Opacity));
+                OpacitySlider.Value = rect.Opacity;
+                RefreshListBox();
 
-                graphics.DrawString($"{prediction.Label.Name} ({score})",
-                    new Font("Arial", 16, GraphicsUnit.Pixel), new SolidBrush(prediction.Label.Color),
-                    new PointF(x, y));
             }
-
-            image.Save(paths[counterImage]);
+            
         }
     }
 }

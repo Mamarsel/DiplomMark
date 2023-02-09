@@ -131,11 +131,17 @@
         <local:ZoomBorder Background="#191919"  ClipToBounds="True"  BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.Row="1">
             <Viewbox>
                 <Grid PreviewMouseUp="GridImage_PreviewMouseUp" MouseDown="MouseDownOnFigureAndCanvas" MouseMove="MouseMoveOnFigureAndCanvas" x:Name="GridImage">
-                    <Border BorderThickness="1" BorderBrush="Black">
 
-                        <Image Stretch="Fill"   x:Name="ImagePreview"   Source="{Binding }" />
-                    </Border>
-                    <Canvas MouseDown="Cnv_MouseDown" x:Name="Cnv"/>
+                    <Viewbox>
+                        <Image   Stretch="Uniform"  StretchDirection="DownOnly"  SnapsToDevicePixels="True"   x:Name="ImagePreview"  RenderOptions.BitmapScalingMode="HighQuality"  Source="{Binding }" >
+                            
+
+                        </Image>
+                    </Viewbox>
+                    <Canvas  MouseDown="Cnv_MouseDown" x:Name="Cnv">
+
+                        
+                    </Canvas>
                 </Grid>
             </Viewbox>
         </local:ZoomBorder>
