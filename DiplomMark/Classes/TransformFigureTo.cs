@@ -24,7 +24,7 @@ namespace DiplomMark.Classes
             List<Figure> list = new List<Figure>();
             foreach (Figure shape in GeneralList)
             {
-                if (paths.Count - 1 > counterPhoto)
+                if (paths.Count - 1 >= counterPhoto && counterPhoto > -1)
                 {
                     if (shape.toFileName == paths[counterPhoto])
                     {
@@ -47,20 +47,25 @@ namespace DiplomMark.Classes
             {
                 if (shape.TypeFigure == "Rectangle")
                 {
-                    var rect = new Rectangle();
-                    rect.Fill = shape.colorFill;
-                    rect.Height = shape.shape.Height;
-                    rect.Width = shape.shape.Width;
-                    rect.Name = shape.shape.Name;
+                    var rect = new Rectangle 
+                    { 
+                        Fill = shape.colorFill, 
+                        Height = shape.shape.Height, 
+                        Width = shape.shape.Width, 
+                        Name = shape.shape.Name
+                    };
                     listResult.Add(rect);
                 }
                 else if (shape.TypeFigure == "Ellipse")
                 {
-                    var rect = new Ellipse();
-                    rect.Height = shape.shape.Height;
-                    rect.Width = shape.shape.Width;
-                    rect.Fill = shape.colorFill;
-                    rect.Name = shape.shape.Name;
+                    var rect = new Ellipse
+                    { 
+                        Fill = shape.colorFill, 
+                        Height = shape.shape.Height, 
+                        Width = shape.shape.Width, 
+                        Name = shape.shape.Name
+                    };
+                   
                     listResult.Add(rect);
                 }
 

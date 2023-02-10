@@ -20,9 +20,9 @@
                     ScrollViewer.CanContentScroll="True"
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     ScrollViewer.VerticalScrollBarVisibility="Visible"
-                    ItemsSource="{Binding Select_Images}"
+                    ItemsSource="{Binding }"
                     ItemContainerStyle="{StaticResource ListBoxItemStyleThumbNails}" 
-                    Name="Thumbnails"   >
+                    Name="Thumbnails">
 
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -40,20 +40,24 @@
                             <Grid VerticalAlignment="Center" >
                                 <Border  Name="mask" Background="White" CornerRadius="7"/>
                                 <StackPanel VerticalAlignment="Center">
-                                    <Image Stretch="Fill" x:Name="ListboxImagePagination" Width="100" Height="100" VerticalAlignment="Center"  Margin="5">
-                                        <Image.Source>
-                                            <BitmapImage DecodePixelWidth="100" DecodePixelHeight="100" UriSource="{Binding FileURL}" />
-                                        </Image.Source>
+                                    <Image Stretch="Fill" x:Name="ListboxImagePagination" Width="100" Height="100" VerticalAlignment="Center"  Margin="5" Source="{Binding imageSource}">
+
                                     </Image>
                                 </StackPanel>
                             </Grid>
-                            <Image  Source="/Resources/correct.png" VerticalAlignment="Bottom" Grid.Row="0" HorizontalAlignment="Right"  Width="20"  Height="20" x:Name="CBSelected"></Image>
+                            <Image  Source="{Binding CheckIcon}" VerticalAlignment="Bottom" Grid.Row="0" HorizontalAlignment="Right"  Width="20"  Height="20" x:Name="CBSelected"></Image>
                         </Grid>
                     </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-
         </ListBox>
+        <StackPanel Grid.Row="0" Grid.Column="1">
+            <CheckBox x:Name="CbCheck" IsChecked="True" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="15" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked">Выбрать все</CheckBox>
+            <Label HorizontalContentAlignment="Center">Выберите разрешение</Label>
+            <ComboBox x:Name="ResolutionsCB" Grid.Column="1" Height="25" Width="100" SelectionChanged="ComboBox_SelectionChanged" HorizontalAlignment="Center" VerticalAlignment="Top" >
+                
+            </ComboBox>
+        </StackPanel>
         <Button Style="{StaticResource AnimationBTN}" Grid.Row="3" FontFamily="Roboto" Foreground="AliceBlue" Height="50" Width="150" VerticalAlignment="Bottom" Grid.Column="1" Click="Button_Click">Начать</Button>
     </Grid>
 </Page>

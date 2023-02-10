@@ -2,29 +2,17 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
-
 using System.Windows;
 using System.Windows.Controls;
-using Python.Included;
-using Python.Runtime;
-
 using System.Diagnostics;
-using Path = System.IO.Path;
-using Microsoft.VisualBasic.ApplicationServices;
-using Aspose.Html.Net;
-
 using System;
-
 using MessageBox = System.Windows.MessageBox;
-
-
-
-using System.Windows.Documents;
-using Aspose.Html.Dom;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-using MS.WindowsAPICodePack.Internal;
-using System.Drawing;
+using System.Reflection;
+using System.Windows.Shapes;
+using System.Linq;
+using System.Security.Permissions;
+using DiplomMark.Classes;
+using Path = System.IO.Path;
 
 namespace DiplomMark.Pages
 {
@@ -33,68 +21,79 @@ namespace DiplomMark.Pages
     /// </summary>
     public partial class SearchPage : Page
     {
-        public static string catalog = "C:\\Users\\JutsPC\\Desktop\\Diplom\\парсер2\\фото\\"; // дефолтный каталог с фотографиями
-        string ca = "C:\\Users\\JutsPC\\Desktop\\das";
-        List<String> imageList = new List<string>();
-        System.Windows.Forms.ImageList imageImageList = new System.Windows.Forms.ImageList();
+        public static string catalog = Directory.GetParent(Assembly.GetExecutingAssembly().Location).FullName + "\\Photos\\"; // дефолтный каталог с фотографиями
+       
         public SearchPage()
         {
             InitializeComponent();
-        }
-        dynamic json;
 
-        
+        }
+      
+
+        private void DeleteAllPhotosInDirectory()
+        {
+            DirectoryInfo di = new DirectoryInfo(catalog);
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+            foreach (DirectoryInfo dir in di.GetDirectories())
+            {
+                dir.Delete(true);
+            }
+        }
+
+
+        private static string[] GetFilesFromDirectory()
+        {
+            string[] FilesJpg = Directory.GetFiles(catalog, "*.jpg");
+            string[] FilesPng = Directory.GetFiles(catalog, "*.png");
+            return   FilesJpg.Concat(FilesPng).ToArray();
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (SearchTB.Text != "") 
+            var files = GetFilesFromDirectory();
+            if (SearchTB.Text != "" ) 
             {
-                System.IO.DirectoryInfo di = new DirectoryInfo(catalog);
-                if (di != null)
+                if (files.Length > 0)
                 {
                     MessageBoxButton button = MessageBoxButton.YesNoCancel;
-                    MessageBoxImage icon = MessageBoxImage.Warning;
-                    var result = MessageBox.Show("Удалить фотографии из этого каталога?", "Удаление фотографии", button, icon, MessageBoxResult.Yes);
-
+                    MessageBoxImage icon    = MessageBoxImage.Warning;
+                    var result = MessageBox.Show("Удалить фотографии из этого каталога?", "Удаление фотографии",button,icon,MessageBoxResult.Yes);
                     switch (result)
                     {
                         case MessageBoxResult.Cancel:
                             break;
                         case MessageBoxResult.Yes:
-                            {
-                                foreach (FileInfo file in di.GetFiles())
-                                {
-                                    file.Delete();
-                                }
-                                foreach (DirectoryInfo dir in di.GetDirectories())
-                                {
-                                    dir.Delete(true);
-                                }
-                                break;
-                            }
+                        {
+                                DeleteAllPhotosInDirectory();
+                            break;
+                        }
                         case MessageBoxResult.No:
                             break;
                     }
                 }
-                string arg = string.Format(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName).FullName + "\\PythonScripts\\dist\\parse.exe {0} {1}", catalog, '"' + SearchTB.Text + '"');
-                Process p = new Process();
+                string arg                 = string.Format(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName).FullName + "\\PythonScripts\\dist\\parse.exe {0} {1}", catalog, '"' + SearchTB.Text + '"');
+                Process p                  = new Process();
                 ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = "cmd.exe ";
-                startInfo.Arguments = @"/c " + arg; // cmd.exe spesific implementation
-                p.StartInfo = startInfo;
+                startInfo.FileName         = "cmd.exe ";
+                startInfo.Arguments        = @"/c " + arg;
+                p.StartInfo                = startInfo;
                 p.Start();
                 p.WaitForExit();
             }
-
-
-
-
-
-
-
-            MainWindow.main.MainFrame.Navigate(new MainPage());
+            files = GetFilesFromDirectory();
+            if (files.Length == 0)
+            {
+                MessageBox.Show("Нет фотографии в каталоге. Загрузите либо выполните запрос");
+                return;
+            }   MainWindow.main.MainFrame.Navigate(new ImagesPage());
 
         }
-
+        public bool IsDirectoryEmpty(string path)
+        {
+            return !Directory.EnumerateFileSystemEntries(path).Any();
+        }
         private void CatalogBtn_Click(object sender, RoutedEventArgs e)
         {
             CommonOpenFileDialog dialog = new CommonOpenFileDialog();

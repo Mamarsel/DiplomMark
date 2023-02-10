@@ -20,9 +20,9 @@ namespace DiplomMark.Classes
         {
             this.coord_x = Math.Round(x, 4);
             this.coord_y = Math.Round(y, 4);
-            this.width = Math.Round(rect.ActualWidth, 4);
-            this.height = Math.Round(rect.ActualHeight, 4);
-            this.name = rect.Name;
+            this.width   = Math.Round(rect.Width, 4);
+            this.height  = Math.Round(rect.Height, 4);
+            this.name    = rect.Name;
             this.toFileName = fileName;
             this.colorFill = (Brush)colorFill;
             this.TypeFigure = "Rectangle";

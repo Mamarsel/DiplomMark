@@ -24,10 +24,9 @@ namespace DiplomMark.Classes
         {
             list.Add(figure);
         }
-        public static void AddShape(Shape sh)
+        public static int GetLastId()
         {
-            ShapeList.Add(sh);
-
+            return list.Last().Id;
         }
     }
 }
