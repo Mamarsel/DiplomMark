@@ -16,7 +16,7 @@ namespace DiplomMark.Classes
     {
         public static List<RectangleShape> rectangleShapesList = new List<RectangleShape>();
 
-        public RectangleShape(string name, double x, double y, string fileName, Brush colorFill, Rectangle rect, double opacity)
+        public RectangleShape(string name, double x, double y, string fileName, Brush colorFill, Shape rect, double opacity, Brush StrokeFill)
         {
             this.coord_x = Math.Round(x, 4);
             this.coord_y = Math.Round(y, 4);
@@ -28,10 +28,11 @@ namespace DiplomMark.Classes
             this.TypeFigure = "Rectangle";
             this.shape = rect;
             this.opacity = opacity;
+            this.StrokeFill = StrokeFill;
         }
-        public static RectangleShape RectangleToFigure(Rectangle rect, double coord_x, double coord_y, string file_name, string name, double opacity)
+        public static RectangleShape RectangleToFigure(Rectangle rect, double coord_x, double coord_y, string file_name, string name, double opacity, Brush StrokeFill)
         {
-            RectangleShape figure = new RectangleShape(name, coord_x, coord_y, file_name, rect.Fill, rect, opacity);
+            RectangleShape figure = new RectangleShape(name, coord_x, coord_y, file_name, rect.Fill, rect, opacity, StrokeFill);
             return figure;
         }
 

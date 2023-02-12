@@ -1,0 +1,19 @@
+﻿<Window x:Class="DiplomMark.Pages.ProgressBarWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DiplomMark.Pages"
+        mc:Ignorable="d"
+        Title="ProgressBarWindow" Height="450" Width="800" Style="{DynamicResource CustomWindowStyle}" WindowStyle="None">
+    <Grid>
+
+        <Border CornerRadius="12" Margin="15" Height="50">
+            <Grid>
+                <Label HorizontalAlignment="Center">Загрузка изоображений</Label>
+                <ProgressBar  Minimum="0" Maximum="100" Value="30" Height="50" Name="pbStatus" IsIndeterminate="True" />
+            </Grid>
+            
+        </Border>
+    </Grid>
+</Window>

@@ -2038,10 +2038,10 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" />
+                        <Border CornerRadius="4" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" />
                         <Rectangle x:Name="PART_Track" />
-                        <Grid x:Name="PART_Indicator" ClipToBounds="true" HorizontalAlignment="Left" Margin="1">
-                            <Rectangle x:Name="Indicator" Fill="{TemplateBinding Foreground}" />
+                        <Grid x:Name="PART_Indicator"  ClipToBounds="true" HorizontalAlignment="Left" Margin="1">
+                            <Rectangle x:Name="Indicator" Fill="{TemplateBinding Foreground}" RadiusX="30" RadiusY="30" />
                             <Rectangle x:Name="Animation" Fill="{TemplateBinding Foreground}" RenderTransformOrigin="0.5,0.5">
                                 <Rectangle.RenderTransform>
                                     <TransformGroup>

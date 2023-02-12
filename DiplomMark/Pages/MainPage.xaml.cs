@@ -24,6 +24,8 @@ using Rectangle = System.Windows.Shapes.Rectangle;
 using ColorConverter = System.Windows.Media.ColorConverter;
 using Point = System.Windows.Point;
 using DiplomMark.Classes.DatabaseFolder;
+using System.Drawing;
+using System.Windows.Controls.Primitives;
 
 namespace DiplomMark.Pages
 {
@@ -32,76 +34,39 @@ namespace DiplomMark.Pages
     /// </summary>
     public partial class MainPage : Page
     {
-        public static int counterImage = 1;
+        public static int counterImage        = 1;
         public static RoutedCommand MyCommand = new();
-
-        private Point startPoint;
-        private Rectangle rect;
-        private Ellipse ellipse;
-
+        public static int GroupIDCounter      = 1;
+        public static List<Figure> rectangleShapesInPhoto = new();
+        private static List<SelectImages> _images = new();
+        private Point _startPoint;
+        private Shape n = new Rectangle();
         int counter = 0;
         int currentPageIndex = 0;
         int itemPerPage = 10;
         int totalPage = 0;
         int totalCount = 0;
-
+       
         List<BitmapImage> itemsList = new();
-        List<string> paths = new List<string>();
-        public static List<Figure> rectangleShapesInPhoto = new();
-        static ListBoxItem currentSelectedListBoxItem;
-        Random r = new();
+        List<string> paths = new();
         ApplicationContext db = new();
+        Random r = new();
+
         static byte R;
         static byte G;
         static byte B;
-        static List<SelectImages> _images = new();
-        public MainPage()
-        {
-            InitializeComponent();
-            CanvasDrawer.SelectedShape = rect;
-
-            DirectoryInfo di = new(@"C:\Users\JutsPC\Desktop\Diplom\парсер2\фото");
-            MyCommand.InputGestures.Add(new KeyGesture(Key.Z, ModifierKeys.Control));
-            foreach (var fi in di.GetFiles())
-            {
-                paths.Add(fi.FullName);
-            }
-           
-            ImagePreview.Source = ImageController.correctImage(paths, counterImage-1);
-            MaxPhotosLabel.Content = paths.Count;
-            totalCount = paths.Count;
-            totalPage = totalCount / itemPerPage;
-            if (totalCount % itemPerPage != 0)
-            {
-                totalPage += 1;
-            }
-            foreach (var fi in di.GetFiles())
-            {
-                itemsList.Add(new BitmapImage(new Uri(fi.FullName)));
-            }
-            for (int i = 0; i < 10; i++)
-            {
-                Thumbnails.Items.Add(itemsList[i].UriSource);
-            }
-            Thumbnails.SelectedIndex = 0;
-        }
+        static ListBoxItem currentSelectedListBoxItem;
+       
 
         public MainPage(List<SelectImages> images)
         {
-
             InitializeComponent();
-            CanvasDrawer.SelectedShape = rect;
+            CanvasDrawer.SelectedShape = n;
             _images = images;
-            Cnv.Height = ImagePreview.Height;
-            Cnv.Width = ImagePreview.Width;
             MyCommand.InputGestures.Add(new KeyGesture(Key.Z, ModifierKeys.Control));
             #region Пагинирование
-            foreach (var fi in _images)
-            {
-                paths.Add(fi.uritoFile);
-            }
+            AddPaths(_images);
             ImagePreview.Source = ImageController.FromFile(paths[counterImage]);
-        
             MaxPhotosLabel.Content = paths.Count;
             totalCount = paths.Count;
             totalPage = totalCount / itemPerPage;
@@ -119,27 +84,46 @@ namespace DiplomMark.Pages
             }
             Thumbnails.SelectedIndex = 0;
             #endregion
-
-            String sPath_SubDirectory = SearchPage.catalog + "\\" + "Saves";
+            OpenToSave();
+        }
+        /// <summary>
+        /// Восстановление сохранения при открытии
+        /// </summary>
+        private void OpenToSave()
+        {
+            String sPath_SubDirectory = SearchPage.catalog + "Saves";
             if (Directory.Exists(sPath_SubDirectory) == false)
             {
                 return;
             }
-            if(!File.Exists(sPath_SubDirectory + "\\saves.json"))
+            if (File.Exists(sPath_SubDirectory + "\\saves.json"))
             {
                 string text = File.ReadAllText(sPath_SubDirectory + "\\saves.json");
                 var x = SerializeToJson.DeserealizingJSON(text);
                 ShapeContainer.list.AddRange(x);
-                rectangleShapesInPhoto = TransformFigureTo.ListRectangleInPhoto(ShapeContainer.list, paths, counterImage);
+                rectangleShapesInPhoto = TransformFigureTo.ListRectangleInPhoto(ShapeContainer.list, paths, counterImage - 1);
                 var listrect = TransformFigureTo.ListToPrintShapes(rectangleShapesInPhoto);
                 PrintImagesInPhoto(rectangleShapesInPhoto, listrect);
                 RefreshListBox();
             }
-
-          
-
         }
-       
+        /// <summary>
+        /// Добавление ссылок фотографии в List
+        /// </summary>
+        /// <param name="images"></param>
+        private void AddPaths(List<SelectImages> images)
+        {
+            foreach (var fi in images)
+            {
+                paths.Add(fi.uritoFile);
+            }
+        }
+        /// <summary>
+        /// Пагинация Листбокса
+        /// </summary>
+        /// <param name="flag">true = Пагинация на страницу вперед
+        ///                    false = Назад
+        /// </param>
         private void PaginationListbox(bool flag)
         {
             if (!flag && currentPageIndex > 0)
@@ -183,11 +167,15 @@ namespace DiplomMark.Pages
                         shapes.Width = figures.shape.Width;
                         shapes.Height = figures.shape.Height;
                         shapes.Name = figures.shape.Name;
-                        shapes.Fill = figures.shape.Fill;
-                        shapes.Stroke = figures.shape.Stroke;
+                        shapes.Fill = figures.colorFill;
+                        shapes.Stroke = figures.StrokeFill;
                         shapes.StrokeThickness = figures.shape.StrokeThickness;
                         figures.shape = shapes;
                         Cnv.Children.Add(shapes);
+                        TextBlock txtBox = new TextBlock() {  Width = 80, Text = shapes.Name, FontSize = 10, Name = shapes.Name };
+                        Cnv.Children.Add(txtBox);
+                        Canvas.SetLeft(txtBox, figures.coord_x);
+                        Canvas.SetTop(txtBox, figures.coord_y);
                     }
                 }
             }
@@ -223,15 +211,13 @@ namespace DiplomMark.Pages
                 var listrect = TransformFigureTo.ListToPrintShapes(rectangleShapesInPhoto);
                 PrintImagesInPhoto(rectangleShapesInPhoto, listrect);
                 Thumbnails.SelectedIndex = (counterImage < 10) ? counterImage - 1 : (counterImage - 1) % 10;
-                if ((counterImage - 1) % 10 == 9)
-                {
+                if ((counterImage - 1) % 10 == 9){
 
                     PaginationListbox(false);
                     Thumbnails.SelectedIndex = 9;
                 }
                 CounterLabel.Content = counterImage;
                 ImagePreview.Source =  ImageController.correctImage(paths, counterImage - 1);
-
             }
         }
         private void LVBack_MouseDown(object sender, MouseButtonEventArgs e)
@@ -243,6 +229,11 @@ namespace DiplomMark.Pages
             PaginationListbox(true);
         }
         #endregion
+        /// <summary>
+        /// При изменении выделенного ListBox справа автоматически устанавливаются значения NameFigure и Slider 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ListBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -264,10 +255,7 @@ namespace DiplomMark.Pages
                     }
                 }
             }
-            catch
-            {
-
-            }
+            catch { }
         }
         private void RefreshListBox()
         {
@@ -279,7 +267,6 @@ namespace DiplomMark.Pages
                 ListBoxAllElements.Items.Add(new MyItem { Counter = counter, TypeFigure = "Rectangle" + counter, NameFigure = x.name, backgroundGrid = x.colorFill, shape = x.shape });
                 counter++;
             }
-
         }
         /// <summary>
         /// Выбор цвета фигуры
@@ -288,7 +275,6 @@ namespace DiplomMark.Pages
         /// <param name="e"></param>
         private void X12_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
-
             if (currentSelectedListBoxItem != null)
             {
                 MyItem o = (MyItem)currentSelectedListBoxItem.DataContext;
@@ -304,17 +290,18 @@ namespace DiplomMark.Pages
                     }
                 }
             }
-
         }
 
         private void DrawEllipseBtn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            CanvasDrawer.SelectedShape = ellipse;
+            n = new Ellipse();
+            CanvasDrawer.SelectedShape = n; //Выбран режим Эллипса
         }
 
         private void Image_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            CanvasDrawer.SelectedShape = rect;
+            n = new Rectangle();
+            CanvasDrawer.SelectedShape = n; // Выбран режим Эллипса
         }
         /// <summary>
         /// Добавление фигуры в статический список ShapeContainer.list для дальнейшей работы с ним
@@ -323,32 +310,16 @@ namespace DiplomMark.Pages
         /// <param name="e"></param>
         private void GridImage_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            var a = (MyItem)ListBoxAllElements.Items[ListBoxAllElements.Items.Count - 1];
-            if (CanvasDrawer.SelectedShape == rect)
+            try
             {
-                ShapeContainer.AddFigure(RectangleShape.RectangleToFigure(rect, Math.Round(CanvasDrawer.coord_x, 4), Math.Round(CanvasDrawer.coord_y, 4), paths[counterImage-1], a.NameFigure, rect.Opacity));
-                OpacitySlider.Value = rect.Opacity;
-                FiguresOnImage n = new FiguresOnImage() { Coord_X = CanvasDrawer.coord_x, Coord_Y = CanvasDrawer.coord_y, Height = rect.Height, Width = rect.Width, URLToImage = paths[counterImage-1], NameFigure = a.NameFigure };
-                db.figuresOnImages.Add(n);
-                
-                foreach(var b in db.figuresOnImages)
-                {
-                    MessageBox.Show("Название: "+b.NameFigure + "\nКоордината X:" + b.Coord_X.ToString() + "\n Координата Y:" + b.Coord_Y + "\n Высота:" + b.Height +
-                        "\nШирина:" + b.Width);
-                }
-               
+                var a = (MyItem)ListBoxAllElements.Items[ListBoxAllElements.Items.Count - 1];
+                ShapeContainer.AddFigure(ShapeFigure.ShapeToFigure(n, Math.Round(CanvasDrawer.coord_x, 4), Math.Round(CanvasDrawer.coord_y, 4), paths[counterImage - 1], n.Name, n.Opacity, n.Stroke));
+                OpacitySlider.Value = n.Opacity;
+                X12.SelectedColor = Color.FromRgb(R, G, B);
+                PreviewColorBorder.Background = new SolidColorBrush(Color.FromRgb(R, G, B));
+                n = null;
             }
-            else if (CanvasDrawer.SelectedShape == ellipse)
-            {
-                ShapeContainer.AddFigure(EllipseShape.EllipseToFigure(ellipse, Math.Round(CanvasDrawer.coord_x, 4), Math.Round(CanvasDrawer.coord_y, 4), paths[counterImage-1], a.TypeFigure, rect.Opacity));
-                OpacitySlider.Value = ellipse.Opacity;
-                FiguresOnImage n = new FiguresOnImage() { Coord_X = CanvasDrawer.coord_x, Coord_Y = CanvasDrawer.coord_y, Height = rect.Height, Width = rect.Width, URLToImage = paths[counterImage - 1], NameFigure = a.NameFigure };
-                db.figuresOnImages.Add(n);
-            }
-            X12.SelectedColor = Color.FromRgb(R, G, B);
-            PreviewColorBorder.Background = new SolidColorBrush(Color.FromRgb(R, G, B));
-            db.SaveChanges();
-
+            catch { }
         }
         #region Рисование
         /// <summary>
@@ -358,67 +329,54 @@ namespace DiplomMark.Pages
         /// <param name="e"></param>
         private void MouseMoveOnFigureAndCanvas(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Released || rect == null || ellipse == null || Keyboard.IsKeyDown(Key.LeftCtrl))
+            if (e.LeftButton == MouseButtonState.Released || n == null || Keyboard.IsKeyDown(Key.LeftCtrl))
                 return;
             var pos = e.GetPosition(Cnv);
-            CanvasDrawer c = new CanvasDrawer(CanvasDrawer.SelectedShape);
-            c.DrawRectangle(startPoint, pos);
+            CanvasDrawer c = new CanvasDrawer(n);
+            c.DrawRectangle(_startPoint, pos);
         }
 
         private void MouseDownOnFigureAndCanvas(object sender, MouseButtonEventArgs e)//Метод для создания фигуры по нажатию мыши, который нужно оптимизировать
         {
-
             if (!Keyboard.IsKeyDown(Key.LeftCtrl))
             {
+                GroupIDCounter++;
+                counter++;
                 R = (byte)r.Next(1, 255);
                 G = (byte)r.Next(1, 255);
                 B = (byte)r.Next(1, 233);
-                startPoint = e.GetPosition(Cnv);
-                if (CanvasDrawer.SelectedShape == rect)
-                {
-                    ellipse = new Ellipse();
-                    rect = new Rectangle();
-                    CanvasDrawer.SelectedShape = rect;
-                    rect.Fill = new SolidColorBrush(Color.FromArgb(40,R, G, B));
-                    rect.Stroke = new SolidColorBrush(Color.FromRgb(R,G,B));
-                    rect.StrokeThickness = 2;
-                    
-                    counter++;
-                    rect.Name = "Rectangle" + counter;
-                    rect.MinHeight = 20;
-                    rect.MinWidth = 20;
-                    Canvas.SetLeft(rect, startPoint.X);
-                    Canvas.SetTop(rect, startPoint.Y);
-                    Cnv.Children.Add(rect);
-                    ListBoxAllElements.Items.Add(new MyItem { Counter = counter, TypeFigure = "RECTANGLE SHAPE", backgroundGrid = new SolidColorBrush(Color.FromRgb(R, G, B)), shape = rect, NameFigure = rect.Name });
-                    ListBoxAllElements.SelectedIndex = ListBoxAllElements.Items.Count - 1;
-                    TextBlock txtBox = new TextBlock() { Width = 80, Text = rect.Name, FontSize = 10, Name = rect.Name };
-                    Cnv.Children.Add(txtBox);
-                    Canvas.SetLeft(txtBox, startPoint.X);
-                    Canvas.SetTop(txtBox, startPoint.Y);
-                    txtBox.Focus();
 
-                }
-                else if (CanvasDrawer.SelectedShape == ellipse)
-                {
-                    rect = new Rectangle();
-                    ellipse = new Ellipse();
-                    CanvasDrawer.SelectedShape = ellipse;
-                    ellipse.Fill = new SolidColorBrush(Color.FromRgb(R, G, B));
-                    ellipse.Stroke = new SolidColorBrush(Colors.Gray);
-                    counter++;
-                    ellipse.Name = "Ellipse" + counter;
-                    Canvas.SetLeft(ellipse, startPoint.X);
-                    Canvas.SetTop(ellipse, startPoint.Y);
-                    Cnv.Children.Add(ellipse);
-                    ListBoxAllElements.Items.Add(new MyItem { Counter = counter, TypeFigure = "RECTANGLE SHAPE", backgroundGrid = new SolidColorBrush(Color.FromRgb(R, G, B)), shape = ellipse, NameFigure = ellipse.Name });
-                    ListBoxAllElements.SelectedIndex = ListBoxAllElements.Items.Count - 1;
-                }
+
+                _startPoint = e.GetPosition(Cnv);
+                if(CanvasDrawer.SelectedShape.GetType().Name == "Rectangle")
+                    n = new Rectangle();
+                if (CanvasDrawer.SelectedShape.GetType().Name == "Ellipse")
+                    n = new Ellipse();
+               
+                
+                n.Stroke = new SolidColorBrush(Color.FromRgb(R, G, B));
+                n.StrokeThickness = 2;
+                n.Fill = new SolidColorBrush(Color.FromArgb(40, R, G, B));
+                
+                n.Name = n.GetType().Name + counter;
+                n.MinHeight = 20;
+                n.MinWidth = 20;
+
+                Canvas.SetLeft(n, _startPoint.X);
+                Canvas.SetTop(n, _startPoint.Y);
+                TextBlock textblock = new();
+                Canvas.SetLeft(textblock, _startPoint.X);
+                Canvas.SetTop(textblock, _startPoint.Y);
+                textblock.Text = n.Name;
+                textblock.Name = n.Name;
+                AddChild(n, GroupIDCounter);
+                AddChild(textblock, GroupIDCounter);
+
+                ListBoxAllElements.Items.Add(new MyItem { Counter = counter, TypeFigure = $"{n.GetType().Name.ToUpper()} SHAPE", backgroundGrid = new SolidColorBrush(Color.FromRgb(R, G, B)), shape = n, NameFigure = n.Name });
+                ListBoxAllElements.SelectedIndex = ListBoxAllElements.Items.Count - 1;
             }
         }
         #endregion
-
-
 
         private void Thumbnails_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -464,7 +422,6 @@ namespace DiplomMark.Pages
         }
         private void OpacitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-
             if (currentSelectedListBoxItem != null)
             {
                 MyItem o = (MyItem)currentSelectedListBoxItem.DataContext;
@@ -525,12 +482,12 @@ namespace DiplomMark.Pages
                     return;
 
                 HitTestResult hitTestResult = VisualTreeHelper.HitTest(canvas, e.GetPosition(canvas));
-                var element = (Shape)hitTestResult.VisualHit;
-                element.Fill = new SolidColorBrush(Colors.Black);
+                var element = hitTestResult.VisualHit;
+                RemoveChildrenWithGroupID(UIElementExtensions.GetGroupID((UIElement)element));
             }
             
         }
-
+        
         private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             String sPath_SubDirectory = SearchPage.catalog + "\\" + "Saves";
@@ -538,7 +495,7 @@ namespace DiplomMark.Pages
             {
                 Directory.CreateDirectory(sPath_SubDirectory);
             }
-            File.WriteAllText(sPath_SubDirectory + "\\saves.json", JsonConvert.SerializeObject(ShapeContainer.list[1]));
+            File.WriteAllText(sPath_SubDirectory + "\\saves.json", JsonConvert.SerializeObject(ShapeContainer.list));
             MessageBox.Show("Данные сохранены.");
         }
 
@@ -559,38 +516,57 @@ namespace DiplomMark.Pages
             var predictions = yolo.Predict(img);
             foreach (var pred in predictions)
             {
+                GroupIDCounter++;
                 var originalImageHeight = img.Height;
                 var originalImageWidth  = img.Width;
-
                 var x      = Math.Max(pred.Rectangle.X, 0);
                 var y      = Math.Max(pred.Rectangle.Y, 0);
                 var width  = Math.Min(originalImageWidth - x, pred.Rectangle.Width);
                 var height = Math.Min(originalImageHeight - y, pred.Rectangle.Height);
-
                 var name   = pred.Label.Name.Replace(" ", "_");
-                Rectangle rect = new Rectangle();
-                Canvas.SetLeft(rect, x);
-                Canvas.SetTop(rect, y);
-                rect.Width   = width;
-                rect.Height  = height;
-               
-                rect.StrokeThickness = 2;
-                rect.Stroke = new SolidColorBrush(Color.FromRgb(R, G, B));
-                rect.Fill    = new SolidColorBrush(Color.FromArgb(40, R,B,G));
-                rect.Name    = name;
-                Cnv.Children.Add(rect);
-
-                TextBlock txtBox = new TextBlock() { Width = 80, Text = rect.Name, FontSize = 10, Name = rect.Name };
-                Cnv.Children.Add(txtBox);
-                Canvas.SetLeft(txtBox, x);
-                Canvas.SetTop(txtBox, y);
-
-                ShapeContainer.AddFigure(RectangleShape.RectangleToFigure(rect, Math.Round(x, 4), Math.Round(y, 4), paths[counterImage-1], rect.Name, rect.Opacity));
-                OpacitySlider.Value = rect.Opacity;
+                n = new Rectangle();
+                Canvas.SetLeft(n, x);
+                Canvas.SetTop(n, y);
+                n.Width   = width;
+                n.Height  = height;
+                n.StrokeThickness = 2;
+                n.Stroke = new SolidColorBrush(Color.FromRgb(R, G, B));
+                n.Fill    = new SolidColorBrush(Color.FromArgb(40, R,B,G));
+                n.Name    = name;
+                Canvas.SetLeft(n, x);
+                Canvas.SetTop(n, y);
+                TextBlock textblock = new();
+                Canvas.SetLeft(textblock, x);
+                Canvas.SetTop(textblock, y);
+                textblock.Text = name;
+                textblock.Name = name;
+                AddChild(n, GroupIDCounter);
+                AddChild(textblock, GroupIDCounter);
+                ShapeContainer.AddFigure(ShapeFigure.ShapeToFigure(n, Math.Round(x, 4), Math.Round(y, 4), paths[counterImage-1], n.Name, n.Opacity, n.Stroke));
+                OpacitySlider.Value = n.Opacity;
                 RefreshListBox();
-
+                
             }
-            
+        }
+        public void AddChild(UIElement element, Int32 groupID)
+        {
+            try
+            {
+                UIElementExtensions.SetGroupID(element, groupID);
+                Cnv.Children.Add(element);
+            }
+            catch { }
+        }
+        public void RemoveChildrenWithGroupID(Int32 groupID)
+        {
+            var childrenToRemove = Cnv.Children.OfType<UIElement>().
+                                   Where(c => UIElementExtensions.GetGroupID(c) == groupID).ToList();
+
+            var a = childrenToRemove.First();
+            ShapeContainer.list.RemoveAll(x => x.shape == a);
+            Cnv.Children.Remove(childrenToRemove[0]);
+            Cnv.Children.Remove(childrenToRemove[1]);
+            RefreshListBox();
         }
     }
 }

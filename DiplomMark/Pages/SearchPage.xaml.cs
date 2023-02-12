@@ -13,6 +13,8 @@ using System.Linq;
 using System.Security.Permissions;
 using DiplomMark.Classes;
 using Path = System.IO.Path;
+using Medallion.Shell;
+using System.Threading.Tasks;
 
 namespace DiplomMark.Pages
 {
@@ -50,7 +52,17 @@ namespace DiplomMark.Pages
             string[] FilesPng = Directory.GetFiles(catalog, "*.png");
             return   FilesJpg.Concat(FilesPng).ToArray();
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+
+        private async Task RunShell()
+        {
+            string arg = string.Format(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName).FullName + "\\PythonScripts\\dist\\parse.exe {0} {1}", catalog, '"' + SearchTB.Text + '"');
+
+            var command = Command.Run(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName).FullName + "\\PythonScripts\\dist\\parse.exe", catalog, '"' + SearchTB.Text + '"');
+        
+            var result = await command.Task;
+       
+        }
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             var files = GetFilesFromDirectory();
             if (SearchTB.Text != "" ) 
@@ -73,14 +85,13 @@ namespace DiplomMark.Pages
                             break;
                     }
                 }
-                string arg                 = string.Format(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName).FullName + "\\PythonScripts\\dist\\parse.exe {0} {1}", catalog, '"' + SearchTB.Text + '"');
-                Process p                  = new Process();
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName         = "cmd.exe ";
-                startInfo.Arguments        = @"/c " + arg;
-                p.StartInfo                = startInfo;
-                p.Start();
-                p.WaitForExit();
+                ProgressGrid.Visibility = Visibility.Visible;
+                BeginBTN.IsEnabled = false;
+                await RunShell();
+
+
+                
+                
             }
             files = GetFilesFromDirectory();
             if (files.Length == 0)

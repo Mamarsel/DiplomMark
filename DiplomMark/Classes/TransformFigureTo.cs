@@ -47,12 +47,13 @@ namespace DiplomMark.Classes
             {
                 if (shape.TypeFigure == "Rectangle")
                 {
-                    var rect = new Rectangle 
-                    { 
-                        Fill = shape.colorFill, 
-                        Height = shape.shape.Height, 
-                        Width = shape.shape.Width, 
-                        Name = shape.shape.Name
+                    var rect = new Rectangle
+                    {
+                        Fill = shape.colorFill,
+                        Height = shape.shape.Height,
+                        Width = shape.shape.Width,
+                        Name = shape.shape.Name,
+                        Stroke = shape.shape.Stroke
                     };
                     listResult.Add(rect);
                 }
@@ -63,7 +64,8 @@ namespace DiplomMark.Classes
                         Fill = shape.colorFill, 
                         Height = shape.shape.Height, 
                         Width = shape.shape.Width, 
-                        Name = shape.shape.Name
+                        Name = shape.shape.Name,
+                        Stroke = shape.shape.Stroke
                     };
                    
                     listResult.Add(rect);

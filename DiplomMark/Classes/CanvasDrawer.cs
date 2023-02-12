@@ -34,6 +34,7 @@ namespace DiplomMark.Classes
             SelectedShape.Width   = width;
             SelectedShape.Height  = height;
             SelectedShape.Opacity = 0.6;
+            
             Canvas.SetLeft(SelectedShape, coord_x);
             Canvas.SetTop(SelectedShape, coord_y);
 
@@ -52,7 +53,7 @@ namespace DiplomMark.Classes
             SelectedShape.Width   = Math.Abs(width);
             SelectedShape.Opacity = 0.6;
         }
-
+        
 
     }
 }

@@ -91,7 +91,7 @@
 
             <Style  TargetType="Button" x:Key="AnimationBTN">
                 <Setter Property="FontSize" Value="20"></Setter>
-                <Setter Property="Background" Value="#2A38B1"></Setter>
+                <Setter Property="Background" Value="#151515"></Setter>
 
                 <Setter Property="Template">
                     <Setter.Value>
@@ -105,7 +105,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
-                            <Border CornerRadius="20"
+                            <Border CornerRadius="10"
                                 Background="{TemplateBinding Background}">
 
                                 <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -151,7 +151,7 @@
                         </Trigger.ExitActions>
                     </Trigger>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="#4753EA"></Setter>
+                        <Setter Property="Background" Value="#303030"></Setter>
                     </Trigger>
 
                 </Style.Triggers>

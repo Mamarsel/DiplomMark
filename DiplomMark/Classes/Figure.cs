@@ -29,5 +29,7 @@ namespace DiplomMark.Classes
         public double width { get; set; }
         public double height { get; set; }
         public double opacity { get; set; }
+        public Brush StrokeFill { get; set; }
+        
     }
 }
