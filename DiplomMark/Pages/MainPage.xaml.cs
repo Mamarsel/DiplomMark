@@ -78,7 +78,7 @@ namespace DiplomMark.Pages
             {
                 itemsList.Add(new BitmapImage(new Uri(fi.uritoFile)));
             }
-            for (int i = 0; i < itemsList.Count%11; i++)
+            for (int i = 0; i < itemsList.ToList().Take(10).Count(); i++)
             {
                 Thumbnails.Items.Add(itemsList[i].UriSource.AbsolutePath);
             }
@@ -126,26 +126,30 @@ namespace DiplomMark.Pages
         /// </param>
         private void PaginationListbox(bool flag)
         {
-            if (!flag && currentPageIndex > 0)
+            try
             {
-                Thumbnails.Items.Clear();
-                currentPageIndex--;
-
-                for (int i = (currentPageIndex) * 10; i < (currentPageIndex + 1) * 10; i++)
+                if (!flag && currentPageIndex > 0)
                 {
-                    Thumbnails.Items.Add(itemsList[i].UriSource);
+                    Thumbnails.Items.Clear();
+                    currentPageIndex--;
+
+                    for (int i = (currentPageIndex) * 10; i < (currentPageIndex + 1) * 10; i++)
+                    {
+                        Thumbnails.Items.Add(itemsList[i].UriSource);
+                    }
+                }
+                if (flag && currentPageIndex < totalPage - 1)
+                {
+                    Thumbnails.Items.Clear();
+
+                    currentPageIndex++;
+                    for (int i = currentPageIndex * 10; i < (currentPageIndex + 1) * 10; i++)
+                    {
+                        Thumbnails.Items.Add(itemsList[i].UriSource);
+                    }
                 }
             }
-            if (flag && currentPageIndex < totalPage - 1)
-            {
-                Thumbnails.Items.Clear();
-
-                currentPageIndex++;
-                for (int i = currentPageIndex * 10; i < (currentPageIndex + 1) * 10; i++)
-                {
-                    Thumbnails.Items.Add(itemsList[i].UriSource);
-                }
-            }
+            catch { }
 
         }
         /// <summary>
@@ -284,7 +288,9 @@ namespace DiplomMark.Pages
                     if (rect.name == o.NameFigure)
                     {
                         Color color = X12.SelectedColor.Value;
-                        rect.shape.Fill = new SolidColorBrush(Color.FromRgb((byte)color.R, (byte)color.G, (byte)color.B));
+                        
+                        rect.shape.Fill = new SolidColorBrush(Color.FromArgb(40,(byte)color.R, (byte)color.G, (byte)color.B));
+                        rect.shape.Stroke = new SolidColorBrush(Color.FromRgb((byte)color.R, (byte)color.G, (byte)color.B));
                         currentSelectedListBoxItem.Background = new SolidColorBrush(Color.FromArgb((byte)125, (byte)color.R, (byte)color.G, (byte)color.B));
                         PreviewColorBorder.Background = new SolidColorBrush(Color.FromRgb((byte)color.R, (byte)color.G, (byte)color.B));
                     }
@@ -510,7 +516,7 @@ namespace DiplomMark.Pages
             R = (byte)r.Next(1, 255);
             G = (byte)r.Next(1, 255);
             B = (byte)r.Next(1, 233);
-            using var yolo = new Classes.Yolo.Models.Yolov8Net(Directory.GetParent( Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName).FullName + "\\Assets\\Weights\\yolov8m.onnx");
+            using var yolo = new Classes.Yolo.Models.Yolov8Net(Directory.GetCurrentDirectory() + @"\Assets\Weights\yolov8m.onnx");
             Image img = Image.FromFile(paths[counterImage - 1]);
             using var image = Image.FromFile(paths[counterImage-1]);
             var predictions = yolo.Predict(img);

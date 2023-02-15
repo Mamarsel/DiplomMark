@@ -27,8 +27,8 @@
             <RowDefinition Height="150"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Background="#1f1f1f">
-            <Button  HorizontalAlignment="Right" Click="Button_Click">
-                Круто
+            <Button  HorizontalAlignment="Right" Click="Button_Click" Cursor="Hand">
+                Разметить (ИИ)
             </Button>
             
             

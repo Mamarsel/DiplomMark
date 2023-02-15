@@ -23,7 +23,7 @@ namespace DiplomMark.Classes
             this.height = height;
             this.opacity = opacity;
             this.StrokeFill = StrokeFill;
-            rect.Fill = this.colorFill;
+            
         }
         public static ShapeFigure ShapeToFigure(Shape rect, double coord_x, double coord_y, string file_name, string name, double opacity, Brush StrokeFill)
         {

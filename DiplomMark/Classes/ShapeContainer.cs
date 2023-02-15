@@ -13,7 +13,7 @@ namespace DiplomMark.Classes
         /// Класс хранящий в себе все фигуры
         /// </summary>
         public static List<Figure> list;
-        public static List<RectangleShape> RectangleList;
+
         public static List<Shape> ShapeList;
         static ShapeContainer()
         {
@@ -23,10 +23,6 @@ namespace DiplomMark.Classes
         public static void AddFigure(Figure figure)
         {
             list.Add(figure);
-        }
-        public static int GetLastId()
-        {
-            return list.Last().Id;
         }
     }
 }

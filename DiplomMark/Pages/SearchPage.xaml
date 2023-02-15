@@ -146,17 +146,17 @@
             <Grid x:Name="InputGrid" Visibility="Visible">
 
 
-                <Border BorderBrush="{x:Null}" Height="50">
-                    <TextBox Style="{DynamicResource TextBoxStyle1}" Background="#202020" TextAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1" HorizontalContentAlignment="Center" x:Name="SearchTB" Padding="0" Margin="120 0" Height="50"  Grid.Row="1" FontFamily="Roboto">
+               
+                    <TextBox  Background="#202020" TextAlignment="Center" VerticalContentAlignment="Center" Grid.Column="1" HorizontalContentAlignment="Center" x:Name="SearchTB" Padding="0" Margin="120 0" Height="50"  Grid.Row="1" FontFamily="Roboto">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
-                                <Setter Property="CornerRadius" Value="15"/>
+                                <Setter Property="CornerRadius" Value="5"/>
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="Height" Value="50"/>
                             </Style>
                         </TextBox.Resources>
                     </TextBox>
-                </Border>
+                
                 
 
                 <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="DarkGray" Text="Ваш запрос.." Grid.Row="1">
@@ -171,18 +171,11 @@
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>
-                <Grid x:Name="ProgressGrid" Background="#202020" Visibility="Hidden">
-                    <Border CornerRadius="12" Margin="120 0" Height="50">
-                        <Grid>
-                            <ProgressBar Style="{DynamicResource ProgressBarStyle1}"   Minimum="0" Maximum="100" Value="30" Height="50" Name="pbStatus" IsIndeterminate="True" />
-                            <Label HorizontalAlignment="Center" Foreground="AliceBlue" VerticalAlignment="Center">Загрузка изоображений...</Label>
-                        </Grid>
 
-                    </Border>
-
+                <Grid x:Name="ProgressGrid" Visibility="Hidden">
+                    <ProgressBar Minimum="0" Maximum="100" Margin="120 0" Value="30" Height="50" Name="pbStatus" IsIndeterminate="True" />
+                    <Label HorizontalAlignment="Center" Foreground="AliceBlue" VerticalAlignment="Center">Загрузка изоображений...</Label>
                 </Grid>
-
-
             </Grid>
             <Button  Background="#151515" x:Name="CatalogBtn" Grid.Column="1" Grid.Row="1" Click="CatalogBtn_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="125" Margin="125 15 0 100" Height="25"  Cursor="Hand">
                 <Button.Resources>

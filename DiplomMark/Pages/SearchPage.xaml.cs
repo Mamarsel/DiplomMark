@@ -23,17 +23,18 @@ namespace DiplomMark.Pages
     /// </summary>
     public partial class SearchPage : Page
     {
-        public static string catalog = Directory.GetParent(Assembly.GetExecutingAssembly().Location).FullName + "\\Photos\\"; // дефолтный каталог с фотографиями
+        public static string catalog = Directory.GetCurrentDirectory() + "\\Photos\\"; // дефолтный каталог с фотографиями
        
         public SearchPage()
         {
             InitializeComponent();
-
+            
         }
       
 
         private void DeleteAllPhotosInDirectory()
         {
+            
             DirectoryInfo di = new DirectoryInfo(catalog);
             foreach (FileInfo file in di.GetFiles())
             {
@@ -55,50 +56,58 @@ namespace DiplomMark.Pages
 
         private async Task RunShell()
         {
-            string arg = string.Format(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName).FullName + "\\PythonScripts\\dist\\parse.exe {0} {1}", catalog, '"' + SearchTB.Text + '"');
-
-            var command = Command.Run(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName).FullName + "\\PythonScripts\\dist\\parse.exe", catalog, '"' + SearchTB.Text + '"');
+            
+            var command = Command.Run(Directory.GetCurrentDirectory() + "\\PythonScripts\\dist\\parse.exe", catalog, '"' + SearchTB.Text + '"');
         
-            var result = await command.Task;
+            await command.Task;
        
         }
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            var files = GetFilesFromDirectory();
-            if (SearchTB.Text != "" ) 
+            
+            try
             {
-                if (files.Length > 0)
+                var files = GetFilesFromDirectory();
+                if (SearchTB.Text != "")
                 {
-                    MessageBoxButton button = MessageBoxButton.YesNoCancel;
-                    MessageBoxImage icon    = MessageBoxImage.Warning;
-                    var result = MessageBox.Show("Удалить фотографии из этого каталога?", "Удаление фотографии",button,icon,MessageBoxResult.Yes);
-                    switch (result)
+                    if (files.Length > 0)
                     {
-                        case MessageBoxResult.Cancel:
-                            break;
-                        case MessageBoxResult.Yes:
+                        MessageBoxButton button = MessageBoxButton.YesNoCancel;
+                        MessageBoxImage icon = MessageBoxImage.Warning;
+                        var result = MessageBox.Show("Удалить фотографии из этого каталога?", "Удаление фотографии", button, icon, MessageBoxResult.Yes);
+                        switch (result)
                         {
-                                DeleteAllPhotosInDirectory();
-                            break;
+                            case MessageBoxResult.Cancel:
+                                break;
+                            case MessageBoxResult.Yes:
+                                {
+                                    DeleteAllPhotosInDirectory();
+                                    break;
+                                }
+                            case MessageBoxResult.No:
+                                break;
                         }
-                        case MessageBoxResult.No:
-                            break;
                     }
+                    ProgressGrid.Visibility = Visibility.Visible;
+                    BeginBTN.IsEnabled = false;
+                    await RunShell();
+
+
+
+
                 }
-                ProgressGrid.Visibility = Visibility.Visible;
-                BeginBTN.IsEnabled = false;
-                await RunShell();
-
-
-                
-                
+                files = GetFilesFromDirectory();
+                if (files.Length == 0)
+                {
+                    MessageBox.Show("Нет фотографии в каталоге. Загрузите либо выполните запрос");
+                    return;
+                }
+                MainWindow.main.MainFrame.Navigate(new ImagesPage());
             }
-            files = GetFilesFromDirectory();
-            if (files.Length == 0)
+           catch(Exception ex)
             {
-                MessageBox.Show("Нет фотографии в каталоге. Загрузите либо выполните запрос");
-                return;
-            }   MainWindow.main.MainFrame.Navigate(new ImagesPage());
+                MessageBox.Show(ex.Message);
+            }
 
         }
         public bool IsDirectoryEmpty(string path)
@@ -108,7 +117,7 @@ namespace DiplomMark.Pages
         private void CatalogBtn_Click(object sender, RoutedEventArgs e)
         {
             CommonOpenFileDialog dialog = new CommonOpenFileDialog();
-            dialog.InitialDirectory = "C:\\Users";
+            dialog.InitialDirectory = catalog;
             dialog.IsFolderPicker = true;
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {

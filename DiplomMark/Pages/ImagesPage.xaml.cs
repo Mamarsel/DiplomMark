@@ -104,11 +104,15 @@ namespace DiplomMark.Pages
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var deleteimage = images.Where(x => x.isCheck == false).ToList();
-            images.RemoveAll(x => x.isCheck == false);
-            RefreshThumb(deleteimage);
-            Thumbnails.ItemsSource = images;
-            MainWindow.main.MainFrame.Navigate(new MainPage(images));
+            try
+            {
+                var deleteimage = images.Where(x => x.isCheck == false).ToList();
+                images.RemoveAll(x => x.isCheck == false);
+                RefreshThumb(deleteimage);
+                Thumbnails.ItemsSource = images;
+                MainWindow.main.MainFrame.Navigate(new MainPage(images));
+            }
+            catch { }
         }
 
         private void Thumbnails_SelectionChanged(object sender, SelectionChangedEventArgs e)

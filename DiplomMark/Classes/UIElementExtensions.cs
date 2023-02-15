@@ -18,8 +18,6 @@ namespace DiplomMark.Classes
         {
             obj.SetValue(GroupIDProperty, value);
         }
-
-        
         public static readonly DependencyProperty GroupIDProperty =
             DependencyProperty.RegisterAttached("GroupID", typeof(Int32), typeof(UIElementExtensions), new UIPropertyMetadata(null));
     }
