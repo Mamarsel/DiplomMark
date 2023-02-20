@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:DiplomMark.Classes"
       xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-      xmlns:self ="clr-namespace:DiplomMark.Pages" 
+      xmlns:self ="clr-namespace:DiplomMark.Pages" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPage">
@@ -128,20 +128,20 @@
             </StackPanel>
         </Grid>
 
-        <local:ZoomBorder Background="#191919"  ClipToBounds="True"  BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.Row="1">
+        <local:ZoomBorder  Background="#191919"  ClipToBounds="True"  BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.Row="1">
             <Viewbox>
-                <Grid PreviewMouseUp="GridImage_PreviewMouseUp" MouseDown="MouseDownOnFigureAndCanvas" MouseMove="MouseMoveOnFigureAndCanvas" x:Name="GridImage">
-
+                <Grid  x:Name="GridImage">
+                    
                     <Viewbox>
                         <Image   Stretch="Uniform"  StretchDirection="DownOnly"  SnapsToDevicePixels="True"   x:Name="ImagePreview"  RenderOptions.BitmapScalingMode="HighQuality"  Source="{Binding }" >
                             
 
                         </Image>
                     </Viewbox>
-                    <Canvas  MouseDown="Cnv_MouseDown" x:Name="Cnv">
+                    <local:CustomCanvas Background="Transparent"  x:Name="Cnv">
 
                         
-                    </Canvas>
+                    </local:CustomCanvas>
                 </Grid>
             </Viewbox>
         </local:ZoomBorder>

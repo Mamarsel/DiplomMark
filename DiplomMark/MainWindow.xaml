@@ -12,11 +12,11 @@
         WindowStyle="None">
 
     <Grid>
-        <Border  Width="Auto" Height="Auto" Name="windowFrame" CornerRadius="10" Grid.RowSpan="4" >
+        <!--<Border  Width="Auto" Height="Auto" Name="windowFrame" CornerRadius="10" Grid.RowSpan="4" >
         </Border>
         <ContentControl MouseDoubleClick="ContentControl_MouseDoubleClick">
             <WrapPanel Background="Gray" VerticalAlignment="Top" Height="35"  Opacity="0.1"></WrapPanel>
-        </ContentControl>
+        </ContentControl>-->
         <Border Grid.Column="1" Margin="0 20 0 0"  CornerRadius="6">
             <Grid>
                 <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Margin="0,16,0,0" />

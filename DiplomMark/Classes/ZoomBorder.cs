@@ -111,7 +111,7 @@ namespace DiplomMark.Classes
         {
             if (child != null)
             {
-                if (Keyboard.IsKeyDown(Key.LeftCtrl))
+                if (Keyboard.IsKeyDown(Key.LeftCtrl) && CustomCanvas.selectedRectangle == null)
                 {
                     var tt = GetTranslateTransform(child);
                     start = e.GetPosition(this);
@@ -140,7 +140,7 @@ namespace DiplomMark.Classes
         {
             if (child != null)
             {
-                if (child.IsMouseCaptured)
+                if (child.IsMouseCaptured )
                 {
                     var tt = GetTranslateTransform(child);
                     Vector v = start - e.GetPosition(this);

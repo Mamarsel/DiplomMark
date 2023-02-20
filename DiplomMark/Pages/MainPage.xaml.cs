@@ -34,34 +34,39 @@ namespace DiplomMark.Pages
     /// </summary>
     public partial class MainPage : Page
     {
+        public static MainPage mainPage;
         public static int counterImage        = 1;
         public static RoutedCommand MyCommand = new();
         public static int GroupIDCounter      = 1;
         public static List<Figure> rectangleShapesInPhoto = new();
+        public static List<string> paths = new();
         private static List<SelectImages> _images = new();
         private Point _startPoint;
-        private Shape n = new Rectangle();
+        public Shape ShapeCurrent = new Rectangle();
         int counter = 0;
         int currentPageIndex = 0;
         int itemPerPage = 10;
         int totalPage = 0;
         int totalCount = 0;
-       
-        List<BitmapImage> itemsList = new();
-        List<string> paths = new();
-        ApplicationContext db = new();
         Random r = new();
 
         static byte R;
         static byte G;
         static byte B;
+        List<BitmapImage> itemsList = new();
+        
+        ApplicationContext db = new();
+       
         static ListBoxItem currentSelectedListBoxItem;
        
 
         public MainPage(List<SelectImages> images)
         {
             InitializeComponent();
-            CanvasDrawer.SelectedShape = n;
+            CanvasDrawer.SelectedShape = ShapeCurrent;
+            Cnv.Focus();
+            Cnv.Focusable = true;
+
             _images = images;
             MyCommand.InputGestures.Add(new KeyGesture(Key.Z, ModifierKeys.Control));
             #region Пагинирование
@@ -85,6 +90,7 @@ namespace DiplomMark.Pages
             Thumbnails.SelectedIndex = 0;
             #endregion
             OpenToSave();
+            mainPage = this;
         }
         /// <summary>
         /// Восстановление сохранения при открытии
@@ -261,7 +267,7 @@ namespace DiplomMark.Pages
             }
             catch { }
         }
-        private void RefreshListBox()
+        public void RefreshListBox()
         {
             ListBoxAllElements.Items.Clear();
             var zxibit = ShapeContainer.list.Where(x => x.toFileName == paths[counterImage-1]).ToList();
@@ -300,90 +306,15 @@ namespace DiplomMark.Pages
 
         private void DrawEllipseBtn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            n = new Ellipse();
-            CanvasDrawer.SelectedShape = n; //Выбран режим Эллипса
+            ShapeCurrent = new Ellipse();
+            CanvasDrawer.SelectedShape = ShapeCurrent; //Выбран режим Эллипса
         }
 
         private void Image_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            n = new Rectangle();
-            CanvasDrawer.SelectedShape = n; // Выбран режим Эллипса
+            ShapeCurrent = new Rectangle();
+            CanvasDrawer.SelectedShape = ShapeCurrent; // Выбран режим Эллипса
         }
-        /// <summary>
-        /// Добавление фигуры в статический список ShapeContainer.list для дальнейшей работы с ним
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void GridImage_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            try
-            {
-                var a = (MyItem)ListBoxAllElements.Items[ListBoxAllElements.Items.Count - 1];
-                ShapeContainer.AddFigure(ShapeFigure.ShapeToFigure(n, Math.Round(CanvasDrawer.coord_x, 4), Math.Round(CanvasDrawer.coord_y, 4), paths[counterImage - 1], n.Name, n.Opacity, n.Stroke));
-                OpacitySlider.Value = n.Opacity;
-                X12.SelectedColor = Color.FromRgb(R, G, B);
-                PreviewColorBorder.Background = new SolidColorBrush(Color.FromRgb(R, G, B));
-                n = null;
-            }
-            catch { }
-        }
-        #region Рисование
-        /// <summary>
-        /// Отрисовка фигур по движению мыши
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MouseMoveOnFigureAndCanvas(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Released || n == null || Keyboard.IsKeyDown(Key.LeftCtrl))
-                return;
-            var pos = e.GetPosition(Cnv);
-            CanvasDrawer c = new CanvasDrawer(n);
-            c.DrawRectangle(_startPoint, pos);
-        }
-
-        private void MouseDownOnFigureAndCanvas(object sender, MouseButtonEventArgs e)//Метод для создания фигуры по нажатию мыши, который нужно оптимизировать
-        {
-            if (!Keyboard.IsKeyDown(Key.LeftCtrl))
-            {
-                GroupIDCounter++;
-                counter++;
-                R = (byte)r.Next(1, 255);
-                G = (byte)r.Next(1, 255);
-                B = (byte)r.Next(1, 233);
-
-
-                _startPoint = e.GetPosition(Cnv);
-                if(CanvasDrawer.SelectedShape.GetType().Name == "Rectangle")
-                    n = new Rectangle();
-                if (CanvasDrawer.SelectedShape.GetType().Name == "Ellipse")
-                    n = new Ellipse();
-               
-                
-                n.Stroke = new SolidColorBrush(Color.FromRgb(R, G, B));
-                n.StrokeThickness = 2;
-                n.Fill = new SolidColorBrush(Color.FromArgb(40, R, G, B));
-                
-                n.Name = n.GetType().Name + counter;
-                n.MinHeight = 20;
-                n.MinWidth = 20;
-
-                Canvas.SetLeft(n, _startPoint.X);
-                Canvas.SetTop(n, _startPoint.Y);
-                TextBlock textblock = new();
-                Canvas.SetLeft(textblock, _startPoint.X);
-                Canvas.SetTop(textblock, _startPoint.Y);
-                textblock.Text = n.Name;
-                textblock.Name = n.Name;
-                AddChild(n, GroupIDCounter);
-                AddChild(textblock, GroupIDCounter);
-
-                ListBoxAllElements.Items.Add(new MyItem { Counter = counter, TypeFigure = $"{n.GetType().Name.ToUpper()} SHAPE", backgroundGrid = new SolidColorBrush(Color.FromRgb(R, G, B)), shape = n, NameFigure = n.Name });
-                ListBoxAllElements.SelectedIndex = ListBoxAllElements.Items.Count - 1;
-            }
-        }
-        #endregion
-
         private void Thumbnails_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (Thumbnails.SelectedItem != null)
@@ -400,10 +331,11 @@ namespace DiplomMark.Pages
             }
 
         }
-        private void ExitCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        public  void AddElementToListBox(MyItem myItem)
         {
-            e.CanExecute = true;
+            ListBoxAllElements.Items.Add(myItem);
         }
+        
         private void ExitCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             rectangleShapesInPhoto = TransformFigureTo.ListRectangleInPhoto(ShapeContainer.list, paths, counterImage-1);
@@ -415,17 +347,7 @@ namespace DiplomMark.Pages
                 ListBoxAllElements.Items.RemoveAt(ListBoxAllElements.Items.Count - 1);
             }
         }
-        private void Save(object sender, ExecutedRoutedEventArgs e)
-        {
-            rectangleShapesInPhoto = TransformFigureTo.ListRectangleInPhoto(ShapeContainer.list, paths, counterImage);
-            var xa = rectangleShapesInPhoto.Select(x => x.shape).ToList();
-            if (xa.Count > 0)
-            {
-                Cnv.Children.Remove(xa.Last());
-                ShapeContainer.list.Remove(rectangleShapesInPhoto.Last());
-                ListBoxAllElements.Items.RemoveAt(ListBoxAllElements.Items.Count - 1);
-            }
-        }
+       
         private void OpacitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (currentSelectedListBoxItem != null)
@@ -479,20 +401,6 @@ namespace DiplomMark.Pages
         {
             e.CanExecute = true;
         }
-        private void Cnv_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (Keyboard.IsKeyDown(Key.LeftCtrl))
-            {
-                var canvas = sender as Canvas;
-                if (canvas == null)
-                    return;
-
-                HitTestResult hitTestResult = VisualTreeHelper.HitTest(canvas, e.GetPosition(canvas));
-                var element = hitTestResult.VisualHit;
-                RemoveChildrenWithGroupID(UIElementExtensions.GetGroupID((UIElement)element));
-            }
-            
-        }
         
         private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
@@ -512,7 +420,6 @@ namespace DiplomMark.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
             R = (byte)r.Next(1, 255);
             G = (byte)r.Next(1, 255);
             B = (byte)r.Next(1, 233);
@@ -530,26 +437,26 @@ namespace DiplomMark.Pages
                 var width  = Math.Min(originalImageWidth - x, pred.Rectangle.Width);
                 var height = Math.Min(originalImageHeight - y, pred.Rectangle.Height);
                 var name   = pred.Label.Name.Replace(" ", "_");
-                n = new Rectangle();
-                Canvas.SetLeft(n, x);
-                Canvas.SetTop(n, y);
-                n.Width   = width;
-                n.Height  = height;
-                n.StrokeThickness = 2;
-                n.Stroke = new SolidColorBrush(Color.FromRgb(R, G, B));
-                n.Fill    = new SolidColorBrush(Color.FromArgb(40, R,B,G));
-                n.Name    = name;
-                Canvas.SetLeft(n, x);
-                Canvas.SetTop(n, y);
+                ShapeCurrent = new Rectangle();
+                Canvas.SetLeft(ShapeCurrent, x);
+                Canvas.SetTop(ShapeCurrent, y);
+                ShapeCurrent.Width   = width;
+                ShapeCurrent.Height  = height;
+                ShapeCurrent.StrokeThickness = 2;
+                ShapeCurrent.Stroke = new SolidColorBrush(Color.FromRgb(R, G, B));
+                ShapeCurrent.Fill    = new SolidColorBrush(Color.FromArgb(40, R,B,G));
+                ShapeCurrent.Name    = name;
+                Canvas.SetLeft(ShapeCurrent, x);
+                Canvas.SetTop(ShapeCurrent, y);
                 TextBlock textblock = new();
                 Canvas.SetLeft(textblock, x);
                 Canvas.SetTop(textblock, y);
                 textblock.Text = name;
                 textblock.Name = name;
-                AddChild(n, GroupIDCounter);
+                AddChild(ShapeCurrent, GroupIDCounter);
                 AddChild(textblock, GroupIDCounter);
-                ShapeContainer.AddFigure(ShapeFigure.ShapeToFigure(n, Math.Round(x, 4), Math.Round(y, 4), paths[counterImage-1], n.Name, n.Opacity, n.Stroke));
-                OpacitySlider.Value = n.Opacity;
+                ShapeContainer.AddFigure(ShapeFigure.ShapeToFigure(ShapeCurrent, Math.Round(x, 4), Math.Round(y, 4), paths[counterImage-1], ShapeCurrent.Name, ShapeCurrent.Opacity, ShapeCurrent.Stroke));
+                OpacitySlider.Value = ShapeCurrent.Opacity;
                 RefreshListBox();
                 
             }
@@ -563,16 +470,6 @@ namespace DiplomMark.Pages
             }
             catch { }
         }
-        public void RemoveChildrenWithGroupID(Int32 groupID)
-        {
-            var childrenToRemove = Cnv.Children.OfType<UIElement>().
-                                   Where(c => UIElementExtensions.GetGroupID(c) == groupID).ToList();
-
-            var a = childrenToRemove.First();
-            ShapeContainer.list.RemoveAll(x => x.shape == a);
-            Cnv.Children.Remove(childrenToRemove[0]);
-            Cnv.Children.Remove(childrenToRemove[1]);
-            RefreshListBox();
-        }
+        
     }
 }
