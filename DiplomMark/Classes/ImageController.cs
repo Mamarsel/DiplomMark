@@ -15,7 +15,7 @@ namespace DiplomMark.Classes
         /// <summary>
         /// Класс для работы с фотографией
         /// </summary>
-        public static byte[] getJPGFromImageControl(BitmapImage imageC)
+        public static byte[] GetJPGFromImageControl(BitmapImage imageC)
         {
             MemoryStream memStream = new();
             JpegBitmapEncoder encoder = new();
@@ -80,7 +80,7 @@ namespace DiplomMark.Classes
             return image;
         }
         //Уменьшение DPI фото до 96-ти
-        public static BitmapSource correctImage(List<string> paths, int counterImage)
+        public static BitmapSource CorrectingImage(List<string> paths, int counterImage)
         {
             try
             {

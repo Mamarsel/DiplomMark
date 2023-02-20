@@ -48,7 +48,7 @@ namespace DiplomMark.Classes
             R = (byte)r.Next(1, 255);
             G = (byte)r.Next(1, 255);
             B = (byte)r.Next(1, 233);
-            _main = MainPage.mainPage;
+            _main = MainPage.MainPageController;
             startPoint = e.GetPosition(this);
             currentMousePosition = startPoint;
             if (Keyboard.Modifiers == ModifierKeys.Control)
@@ -92,8 +92,8 @@ namespace DiplomMark.Classes
                {
                    Counter = counter,
                    TypeFigure = $"{currentRectangle.GetType().Name.ToUpper()} SHAPE",
-                   backgroundGrid = new SolidColorBrush(Color.FromRgb(R, G, B)),
-                   shape = currentRectangle,
+                   BackgroundGrid = new SolidColorBrush(Color.FromRgb(R, G, B)),
+                   FigureShape = currentRectangle,
                    NameFigure = currentRectangle.Name
                });
                 _main.ListBoxAllElements.SelectedIndex = _main.ListBoxAllElements.Items.Count - 1;
@@ -133,10 +133,10 @@ namespace DiplomMark.Classes
                 if (currentRectangle.Width > _mouseDownDistanceThreshold || currentRectangle.Height > _mouseDownDistanceThreshold)
                 {
                     var a = (MyItem)_main.ListBoxAllElements.Items[_main.ListBoxAllElements.Items.Count - 1];
-                    ShapeContainer.AddFigure(ShapeFigure.ShapeToFigure(currentRectangle, Math.Round(_coordX, 4), Math.Round(_coordY, 4), MainPage.paths[MainPage.counterImage - 1], currentRectangle.Name, currentRectangle.Opacity, currentRectangle.Stroke));
-                    _main.OpacitySlider.Value = _main.ShapeCurrent.Opacity;
-                    MainPage.mainPage.X12.SelectedColor = Color.FromRgb(R, G, B);
-                    MainPage.mainPage.PreviewColorBorder.Background = new SolidColorBrush(Color.FromRgb(R, G, B));
+                    FiguresList.AddFigure(ShapeFigure.ShapeToFigure(currentRectangle, Math.Round(_coordX, 4), Math.Round(_coordY, 4), MainPage.Paths[MainPage.CounterImage - 1], currentRectangle.Name, currentRectangle.Opacity, currentRectangle.Stroke));
+                    _main.OpacitySlider.Value = currentRectangle.Opacity;
+                    MainPage.MainPageController.X12.SelectedColor = Color.FromRgb(R, G, B);
+                    MainPage.MainPageController.PreviewColorBorder.Background = new SolidColorBrush(Color.FromRgb(R, G, B));
                     rectangles.Add(currentRectangle);
                     currentRectangle = null;
                 }
@@ -163,8 +163,8 @@ namespace DiplomMark.Classes
             if (e.Key == Key.Delete && this.Children.Contains(selectedRectangle))
             {
                 this.Children.Remove(selectedRectangle);
-                ShapeContainer.list.Remove(ShapeContainer.list.FirstOrDefault(x=>x.shape == selectedRectangle));
-                MainPage.mainPage.RefreshListBox();
+                FiguresList.ListFigures.Remove(FiguresList.ListFigures.FirstOrDefault(x=>x.ShapeFigure == selectedRectangle));
+                MainPage.MainPageController.RefreshListBox();
                 selectedRectangle = null;
 
             }

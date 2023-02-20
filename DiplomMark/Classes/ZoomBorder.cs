@@ -19,13 +19,13 @@ namespace DiplomMark.Classes
         private Point origin;
         private Point start;
 
-        private TranslateTransform GetTranslateTransform(UIElement element)
+        private TranslateTransform _getTranslateTransform(UIElement element)
         {
             return (TranslateTransform)((TransformGroup)element.RenderTransform)
               .Children.First(tr => tr is TranslateTransform);
         }
 
-        private ScaleTransform GetScaleTransform(UIElement element)
+        private ScaleTransform _getScaleTransform(UIElement element)
         {
             return (ScaleTransform)((TransformGroup)element.RenderTransform)
               .Children.First(tr => tr is ScaleTransform);
@@ -68,12 +68,12 @@ namespace DiplomMark.Classes
             if (child != null)
             {
                 // reset zoom
-                var st = GetScaleTransform(child);
+                var st = _getScaleTransform(child);
                 st.ScaleX = 1.0;
                 st.ScaleY = 1.0;
 
                 // reset pan
-                var tt = GetTranslateTransform(child);
+                var tt = _getTranslateTransform(child);
                 tt.X = 0.0;
                 tt.Y = 0.0;
             }
@@ -85,8 +85,8 @@ namespace DiplomMark.Classes
         {
             if (child != null)
             {
-                var st = GetScaleTransform(child);
-                var tt = GetTranslateTransform(child);
+                var st = _getScaleTransform(child);
+                var tt = _getTranslateTransform(child);
 
                 double zoom = e.Delta > 0 ? .2 : -.2;
                 if (!(e.Delta > 0) && (st.ScaleX < .2 || st.ScaleY < .2))
@@ -113,7 +113,7 @@ namespace DiplomMark.Classes
             {
                 if (Keyboard.IsKeyDown(Key.LeftCtrl) && CustomCanvas.selectedRectangle == null)
                 {
-                    var tt = GetTranslateTransform(child);
+                    var tt = _getTranslateTransform(child);
                     start = e.GetPosition(this);
                     origin = new Point(tt.X, tt.Y);
                     this.Cursor = Cursors.Hand;
@@ -142,7 +142,7 @@ namespace DiplomMark.Classes
             {
                 if (child.IsMouseCaptured )
                 {
-                    var tt = GetTranslateTransform(child);
+                    var tt = _getTranslateTransform(child);
                     Vector v = start - e.GetPosition(this);
                     tt.X = origin.X - v.X;
                     tt.Y = origin.Y - v.Y;

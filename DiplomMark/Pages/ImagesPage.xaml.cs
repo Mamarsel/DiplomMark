@@ -37,7 +37,7 @@ namespace DiplomMark.Pages
             string[] FilesPng = Directory.GetFiles(SearchPage.catalog, "*.png");
             filesImages = FilesJpg.Concat(FilesPng).ToArray();
             foreach (var fi in filesImages)
-                images.Add(new SelectImages { imageSource = BitmapFromUri(new Uri(fi)), uritoFile = fi, isCheck = true });
+                images.Add(new SelectImages { SourceImage = BitmapFromUri(new Uri(fi)), URIToFile = fi, IsCheck = true });
             GetResolutionAllImages(images);
 
             images = SetResolutionAllImages(images);
@@ -54,12 +54,12 @@ namespace DiplomMark.Pages
         {
             foreach (var file in image)
             {
-                using (var fileStream = new FileStream(file.uritoFile, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (var fileStream = new FileStream(file.URIToFile, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     using (var img = System.Drawing.Image.FromStream(fileStream, false, false))
                     {
-                        //file.imageWidth = img.Width;
-                        //file.imageHeight = img.Height;
+                        //file.ImageWidth = img.Width;
+                        //file.ImageHeight = img.Height;
                         if (!imageResolution.Contains($"{img.Width}x{img.Height}"))
                         {
                             imageResolution.Add($"{img.Width}x{img.Height}");
@@ -72,12 +72,12 @@ namespace DiplomMark.Pages
         {
             foreach (var file in image)
             {
-                using (var fileStream = new FileStream(file.uritoFile, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (var fileStream = new FileStream(file.URIToFile, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     using (var img = System.Drawing.Image.FromStream(fileStream, false, false))
                     {
-                        file.imageWidth = img.Width;
-                        file.imageHeight = img.Height;
+                        file.ImageWidth = img.Width;
+                        file.ImageHeight = img.Height;
                     }
                 }
             }
@@ -98,7 +98,7 @@ namespace DiplomMark.Pages
             Thumbnails.ItemsSource = null;
             foreach (var fi in images)
             {
-                File.Delete(fi.uritoFile);
+                File.Delete(fi.URIToFile);
                 
             }
         }
@@ -106,8 +106,8 @@ namespace DiplomMark.Pages
         {
             try
             {
-                var deleteimage = images.Where(x => x.isCheck == false).ToList();
-                images.RemoveAll(x => x.isCheck == false);
+                var deleteimage = images.Where(x => x.IsCheck == false).ToList();
+                images.RemoveAll(x => x.IsCheck == false);
                 RefreshThumb(deleteimage);
                 Thumbnails.ItemsSource = images;
                 MainWindow.main.MainFrame.Navigate(new MainPage(images));
@@ -120,23 +120,23 @@ namespace DiplomMark.Pages
             var selected_item = Thumbnails.SelectedItem as SelectImages;
             if (selected_item == null)
                 return;
-            var selectedimage = images.FirstOrDefault(x => x.uritoFile == selected_item.uritoFile);
+            var selectedimage = images.FirstOrDefault(x => x.URIToFile == selected_item.URIToFile);
             var currentSelectedListBoxItem = Thumbnails.ItemContainerGenerator.ContainerFromIndex(Thumbnails.SelectedIndex) as ListBoxItem;
             ContentPresenter myContentPresenter = VisualFindChild.FindVisualChild<ContentPresenter>(currentSelectedListBoxItem);
 
             if (myContentPresenter == null) { return; }
             DataTemplate myDataTemplate = myContentPresenter.ContentTemplate;
             Image target = (Image)myDataTemplate.FindName("CBSelected", myContentPresenter);
-            if (!selectedimage.isCheck)
+            if (!selectedimage.IsCheck)
             {
                 target.Source = ImageController.FromFile(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources/correct.png"));
-                images.FirstOrDefault(x => x.uritoFile == selected_item.uritoFile).isCheck = true;
+                images.FirstOrDefault(x => x.URIToFile == selected_item.URIToFile).IsCheck = true;
                 Thumbnails.SelectedItem = null;
             }
-            else if (selectedimage.isCheck)
+            else if (selectedimage.IsCheck)
             {
                 target.Source = ImageController.FromFile(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources/remove.png"));
-                images.FirstOrDefault(x => x.uritoFile == selected_item.uritoFile).isCheck = false;
+                images.FirstOrDefault(x => x.URIToFile == selected_item.URIToFile).IsCheck = false;
                 Thumbnails.SelectedItem = null;
             }
 
@@ -144,13 +144,13 @@ namespace DiplomMark.Pages
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            images.ToList().ForEach(x => x.isCheck = CbCheck.IsChecked.Value);
+            images.ToList().ForEach(x => x.IsCheck = CbCheck.IsChecked.Value);
             CheckAllItems();
         }
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            images.ToList().ForEach(x => x.isCheck = CbCheck.IsChecked.Value);
+            images.ToList().ForEach(x => x.IsCheck = CbCheck.IsChecked.Value);
             CheckAllItems();
         }
         private void UpdateThumbnails(List<SelectImages> images)
@@ -164,7 +164,7 @@ namespace DiplomMark.Pages
                     List<SelectImages> temp = new();
                     foreach (var item in images)
                     {
-                        if (($"{item.imageWidth}x{item.imageHeight}" == ResolutionsCB.SelectedItem.ToString()))
+                        if (($"{item.ImageWidth}x{item.ImageHeight}" == ResolutionsCB.SelectedItem.ToString()))
                         {
                             temp.Add(item);
                         }
@@ -193,7 +193,7 @@ namespace DiplomMark.Pages
                 if (myContentPresenter == null) { continue; }
                 DataTemplate myDataTemplate = myContentPresenter.ContentTemplate;
                 Image target = (Image)myDataTemplate.FindName("CBSelected", myContentPresenter);
-                if (data.isCheck)
+                if (data.IsCheck)
                 {
                     target.Source = ImageController.FromFile(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources/correct.png"));
                 }

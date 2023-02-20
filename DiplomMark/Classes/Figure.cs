@@ -13,22 +13,22 @@ namespace DiplomMark.Classes
     abstract public class Figure
     {
 
-        public double coord_x { get; set; }
-        public double coord_y { get; set; }
-        public int Id { get; set; }
-        public string name { get; set; }
+        public double Coord_X { get; set; }
+        public double Coord_Y { get; set; }
+      
+        public string NameFigure { get; set; }
 
-        public string toFileName { get; set; }
+        public string ToFileName { get; set; }
        
-        public Brush colorFill { get; set; }
+        public Brush ColorFill { get; set; }
         public string TypeFigure { get; set; }
         [JsonIgnore]
         [IgnoreDataMember]
-        public Shape shape { get; set; }
+        public Shape ShapeFigure { get; set; }
 
-        public double width { get; set; }
-        public double height { get; set; }
-        public double opacity { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+        public double FigureOpacity { get; set; }
         public Brush StrokeFill { get; set; }
         
     }

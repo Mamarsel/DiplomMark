@@ -16,9 +16,9 @@ namespace DiplomMark.Classes
         ///<summary>
         /// Все фигуры внутри фото
         ///</summary>
-        ///<param name="counterPhoto">Текущее фото</param>
-        ///<param name="GeneralList">Основной лист</param>
-        ///<param name="paths">Все ссылки на фото</param>
+        ///<param NameFigure="counterPhoto">Текущее фото</param>
+        ///<param NameFigure="GeneralList">Основной лист</param>
+        ///<param NameFigure="Paths">Все ссылки на фото</param>
         public static List<Figure> ListRectangleInPhoto(List<Figure> GeneralList, List<string> paths, int counterPhoto)
         {
             List<Figure> list = new List<Figure>();
@@ -26,7 +26,7 @@ namespace DiplomMark.Classes
             {
                 if (paths.Count - 1 >= counterPhoto && counterPhoto > -1)
                 {
-                    if (shape.toFileName == paths[counterPhoto])
+                    if (shape.ToFileName == paths[counterPhoto])
                     {
                         list.Add(shape);
                     }
@@ -38,7 +38,7 @@ namespace DiplomMark.Classes
         /// <summary>
         /// Преобразование абстрактной класса Figure в другой абстрактный класс Shape
         /// </summary>
-        /// <param name="figuresList"></param>
+        /// <param NameFigure="figuresList"></param>
         /// <returns></returns>
         public static List<Shape> ListToPrintShapes(List<Figure> figuresList)
         {
@@ -49,11 +49,11 @@ namespace DiplomMark.Classes
                 {
                     var rect = new Rectangle
                     {
-                        Fill = shape.colorFill,
-                        Height = shape.shape.Height,
-                        Width = shape.shape.Width,
-                        Name = shape.shape.Name,
-                        Stroke = shape.shape.Stroke
+                        Fill = shape.ColorFill,
+                        Height = shape.ShapeFigure.Height,
+                        Width = shape.ShapeFigure.Width,
+                        Name = shape.ShapeFigure.Name,
+                        Stroke = shape.ShapeFigure.Stroke
                     };
                     listResult.Add(rect);
                 }
@@ -61,11 +61,11 @@ namespace DiplomMark.Classes
                 {
                     var rect = new Ellipse
                     { 
-                        Fill = shape.colorFill, 
-                        Height = shape.shape.Height, 
-                        Width = shape.shape.Width, 
-                        Name = shape.shape.Name,
-                        Stroke = shape.shape.Stroke
+                        Fill = shape.ColorFill, 
+                        Height = shape.ShapeFigure.Height, 
+                        Width = shape.ShapeFigure.Width, 
+                        Name = shape.ShapeFigure.Name,
+                        Stroke = shape.ShapeFigure.Stroke
                     };
                    
                     listResult.Add(rect);

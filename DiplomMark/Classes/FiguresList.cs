@@ -7,22 +7,22 @@ using System.Windows.Shapes;
 
 namespace DiplomMark.Classes
 {
-    public static class ShapeContainer
+    public static class FiguresList
     {
         /// <summary>
         /// Класс хранящий в себе все фигуры
         /// </summary>
-        public static List<Figure> list;
+        public static List<Figure> ListFigures;
 
         public static List<Shape> ShapeList;
-        static ShapeContainer()
+        static FiguresList()
         {
-            list = new List<Figure>();
+            ListFigures = new List<Figure>();
             ShapeList = new List<Shape>();
         }
         public static void AddFigure(Figure figure)
         {
-            list.Add(figure);
+            ListFigures.Add(figure);
         }
     }
 }

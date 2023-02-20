@@ -14,7 +14,7 @@ namespace DiplomMark.Classes
 
         public string TypeFigure { get; set; }
         public string NameFigure { get; set; }
-        public Brush backgroundGrid { get; set; }
-        public Shape shape { get; set; }
+        public Brush BackgroundGrid { get; set; }
+        public Shape FigureShape { get; set; }
     }
 }

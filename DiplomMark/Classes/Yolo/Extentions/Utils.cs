@@ -27,10 +27,10 @@ namespace DiplomMark.Classes.Yolo.Extentions
 
             var output = new Bitmap(target_width, target_height, format);
 
-            var (w, h) = (image.Width, image.Height); // image width and height
+            var (w, h) = (image.Width, image.Height); // image Width and Height
             var (xRatio, yRatio) = (target_width / (float)w, target_height / (float)h); // x, y ratios
             var ratio = Math.Min(xRatio, yRatio); // ratio = resized / original
-            var (width, height) = ((int)(w * ratio), (int)(h * ratio)); // roi width and height
+            var (width, height) = ((int)(w * ratio), (int)(h * ratio)); // roi Width and Height
             var (x, y) = ((target_width / 2) - (width / 2), (target_height / 2) - (height / 2)); // roi x and y coordinates
             var roi = new Rectangle(x, y, width, height); // region of interest
 
@@ -66,7 +66,7 @@ namespace DiplomMark.Classes.Yolo.Extentions
 
                     Parallel.For(0, bitmapData.Width, (x) =>
                     {
-                        tensor[0, 0, y, x] = row[x * bytesPerPixel + 2] / 255.0F; // r
+                        tensor[0, 0, y, x] = row[x * bytesPerPixel + 2] / 255.0F; // _rand
                         tensor[0, 1, y, x] = row[x * bytesPerPixel + 1] / 255.0F; // g
                         tensor[0, 2, y, x] = row[x * bytesPerPixel + 0] / 255.0F; // b
                     });

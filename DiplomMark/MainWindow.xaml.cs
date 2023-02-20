@@ -1,4 +1,4 @@
-﻿using DiplomMark.Classes.DatabaseFolder;
+﻿
 using DiplomMark.Pages;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -24,19 +24,13 @@ namespace DiplomMark
     public partial class MainWindow : Window
     {
         public static MainWindow main = new MainWindow();
-        ApplicationContext db = new ApplicationContext();
+        
         public MainWindow()
         {
             InitializeComponent();
             main = this;
             MainFrame.Navigate(new WelcomePage());
-            db.Database.EnsureCreated();
-            db.figuresOnImages.Load();
-        
-            
-            DataContext = db.figuresOnImages.Local.ToObservableCollection();
-
-
+           
         }
         public void CreateCustomerCommnand()
         {

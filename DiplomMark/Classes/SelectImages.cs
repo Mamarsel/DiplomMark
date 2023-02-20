@@ -11,19 +11,12 @@ namespace DiplomMark.Classes
 {
     public class SelectImages
     {
-        public ImageSource imageSource { get; set; }
-        public string uritoFile { get; set; }
-        public bool isCheck { get; set; }
-        public int imageWidth { get; set; }
-        public int imageHeight { get; set; }
+        public ImageSource SourceImage { get; set; }
+        public string URIToFile { get; set; }
+        public bool IsCheck { get; set; }
+        public int ImageWidth { get; set; }
+        public int ImageHeight { get; set; }
 
-        public BitmapImage CheckIcon
-        {
-            get
-            {
-                return (isCheck) ? ImageController.FromFile(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources/correct.png")) :
-                    ImageController.FromFile(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources/remove.png"));
-            }
-        }
+
     }
 }

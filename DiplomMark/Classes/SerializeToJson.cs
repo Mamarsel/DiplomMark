@@ -14,7 +14,7 @@ namespace DiplomMark.Classes
         /// <summary>
         /// Класс для десериализации и сериализации в JSON
         /// </summary>
-        /// <param name="Json"></param>
+        /// <param NameFigure="Json"></param>
         /// <returns></returns>
         public static List<Figure> DeserealizingJSON(string Json)
         {
@@ -24,14 +24,14 @@ namespace DiplomMark.Classes
             {
                 if (figure.TypeFigure == "Rectangle")
                 {
-                    Rectangle shape = new Rectangle() { Fill = figure.colorFill, Width = figure.width, Height = figure.height, Name = figure.name, Opacity = figure.opacity, Stroke = figure.StrokeFill };
-                    ShapeFigure s = new ShapeFigure(figure.name, figure.coord_x, figure.coord_y, figure.toFileName, figure.colorFill, shape, figure.TypeFigure, shape.Width, shape.Height, figure.opacity, shape.Stroke);
+                    Rectangle shape = new Rectangle() { Fill = figure.ColorFill, Width = figure.Width, Height = figure.Height, Name = figure.NameFigure, Opacity = figure.FigureOpacity, Stroke = figure.StrokeFill };
+                    ShapeFigure s = new ShapeFigure(figure.NameFigure, figure.Coord_X, figure.Coord_Y, figure.ToFileName, figure.ColorFill, shape, figure.TypeFigure, shape.Width, shape.Height, figure.FigureOpacity, shape.Stroke);
                     listfigures.Add(s);
                 }
                 if (figure.TypeFigure == "Ellipse")
                 {
-                    Ellipse shape = new Ellipse() { Fill = figure.colorFill, Width = figure.width, Height = figure.height, Name = figure.name, Stroke = figure.StrokeFill };
-                    ShapeFigure s = new ShapeFigure(figure.name, figure.coord_x, figure.coord_y, figure.toFileName, figure.colorFill, shape, figure.TypeFigure, shape.Width, shape.Height, figure.opacity, shape.Stroke);
+                    Ellipse shape = new Ellipse() { Fill = figure.ColorFill, Width = figure.Width, Height = figure.Height, Name = figure.NameFigure, Stroke = figure.StrokeFill };
+                    ShapeFigure s = new ShapeFigure(figure.NameFigure, figure.Coord_X, figure.Coord_Y, figure.ToFileName, figure.ColorFill, shape, figure.TypeFigure, shape.Width, shape.Height, figure.FigureOpacity, shape.Stroke);
                     listfigures.Add(s);
                 }
             }

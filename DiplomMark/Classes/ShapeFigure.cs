@@ -12,16 +12,16 @@ namespace DiplomMark.Classes
     {
         public ShapeFigure(string name, double x, double y, string fileName, Brush colorFill, Shape rect, string typeFigure, double width, double height, double opacity, Brush StrokeFill)
         {
-            this.coord_x = Math.Round(x, 4);
-            this.coord_y = Math.Round(y, 4);
-            this.name = name;
-            this.toFileName = fileName;
-            this.colorFill = colorFill;
+            this.Coord_X = Math.Round(x, 4);
+            this.Coord_Y = Math.Round(y, 4);
+            this.NameFigure = name;
+            this.ToFileName = fileName;
+            this.ColorFill = colorFill;
             this.TypeFigure = typeFigure;
-            this.shape = rect;
-            this.width = width;
-            this.height = height;
-            this.opacity = opacity;
+            this.ShapeFigure = rect;
+            this.Width = width;
+            this.Height = height;
+            this.FigureOpacity = opacity;
             this.StrokeFill = StrokeFill;
             
         }
