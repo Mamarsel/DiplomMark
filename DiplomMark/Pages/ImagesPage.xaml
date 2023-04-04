@@ -40,7 +40,7 @@
                             <Grid VerticalAlignment="Center" >
                                 <Border  Name="mask" Background="White" CornerRadius="7"/>
                                 <StackPanel VerticalAlignment="Center">
-                                    <Image Stretch="Fill" x:Name="ListboxImagePagination" Width="100" Height="100" VerticalAlignment="Center"  Margin="5" Source="{Binding imageSource}">
+                                    <Image Stretch="Fill" x:Name="ListboxImagePagination" Width="100" Height="100" VerticalAlignment="Center"  Margin="5" Source="{Binding SourceImage}">
 
                                     </Image>
                                 </StackPanel>

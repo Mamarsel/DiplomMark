@@ -12,6 +12,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -66,7 +67,16 @@ namespace DiplomMark
         {
 
         }
+       
 
-        
+        private void HomeIcon_MouseEnter(object sender, MouseEventArgs e)
+        {
+           
+        }
+
+        private void Image_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MainFrame.Navigate(new WelcomePage());
+        }
     }
 }

@@ -26,7 +26,6 @@ namespace DiplomMark.Pages
     /// </summary>
     public partial class ImagesPage : Page
     {
-
         static List<SelectImages> images = new();
         static string[] filesImages;
         public ImagesPage()

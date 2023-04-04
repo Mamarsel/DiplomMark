@@ -45,32 +45,15 @@ namespace DiplomMark.Classes
             List<Shape> listResult = new List<Shape>();
             foreach (Figure shape in figuresList)
             {
-                if (shape.TypeFigure == "Rectangle")
+                var rect = new Rectangle
                 {
-                    var rect = new Rectangle
-                    {
-                        Fill = shape.ColorFill,
-                        Height = shape.ShapeFigure.Height,
-                        Width = shape.ShapeFigure.Width,
-                        Name = shape.ShapeFigure.Name,
-                        Stroke = shape.ShapeFigure.Stroke
-                    };
-                    listResult.Add(rect);
-                }
-                else if (shape.TypeFigure == "Ellipse")
-                {
-                    var rect = new Ellipse
-                    { 
-                        Fill = shape.ColorFill, 
-                        Height = shape.ShapeFigure.Height, 
-                        Width = shape.ShapeFigure.Width, 
-                        Name = shape.ShapeFigure.Name,
-                        Stroke = shape.ShapeFigure.Stroke
-                    };
-                   
-                    listResult.Add(rect);
-                }
-
+                    Fill = shape.ColorFill,
+                    Height = shape.ShapeFigure.Height,
+                    Width = shape.ShapeFigure.Width,
+                    Name = shape.ShapeFigure.Name,
+                    Stroke = shape.ShapeFigure.Stroke
+                };
+                listResult.Add(rect);
             }
             return listResult;
         }

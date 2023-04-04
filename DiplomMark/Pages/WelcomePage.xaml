@@ -9,26 +9,137 @@
       Title="WelcomePage">
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="91*"/>
+            <ColumnDefinition Width="131*"/>
+            <ColumnDefinition Width="86*"/>
+            <ColumnDefinition Width="92*"/>
+        </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="114*"/>
-            <RowDefinition Height="183*"/>
-            <RowDefinition Height="68*"/>
-            <RowDefinition Height="85*"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <ContentControl  Grid.Row="0" Grid.Column="1" Margin="0 0 0 30">
-            <Image Height="150" Width="150" MaxHeight="200" MaxWidth="200" Source="/Resources/logo.png" HorizontalAlignment="Left"/>
-        </ContentControl>
-        <Label Grid.Row="1" FontSize="36"   HorizontalAlignment="Center" FontFamily="Roboto"  VerticalAlignment="Top" Height="58" Width="336" FontWeight="Bold"  Grid.Column="1" >Добро пожаловать</Label>
-        <StackPanel  Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
+        <Grid Grid.Column="3" Background="#333333">
+            <StackPanel Grid.Column="1"  Background="#333333">
+                <Grid Background="#1C1C1C" VerticalAlignment="Top" Height="25">
+                    <Label Foreground="#CACACA">Recent Projects</Label>
+                </Grid>
+                <Grid  x:Name="GridDynamicElements" Grid.Row="1" Grid.Column="1"  Background="#333333" >
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True">
+                        <ListBox BorderBrush="#333333" HorizontalContentAlignment="Stretch"  ItemsSource="{Binding }" MouseDoubleClick="ListBoxAllElements_MouseDoubleClick"  ItemContainerStyle="{StaticResource ListBoxItemStyle1}" SelectionMode="Single" ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="ListBoxAllElements">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel >
+                                    </StackPanel>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel Height="25" >
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1*">
 
-            <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontFamily="Roboto Light" Height="54" Margin=" 0" Width="572" TextWrapping="Wrap" TextAlignment="Center"  >Это приложение создано для того, чтобы размечать фотографии для упрощения дальнейшей работы с машинным обучением.
-            </TextBlock>
-            <Label Margin="40 0" FontFamily="Roboto Light"  HorizontalAlignment="Center">Для продолжения работы нажмите на кнопку "Начать"</Label>
-        </StackPanel>
-        <Button Style="{StaticResource AnimationBTN}" Grid.Row="3" FontFamily="Roboto" Foreground="AliceBlue" Height="50" Width="200" Margin="197,17,179,18" Grid.Column="1" Click="Button_Click">Начать</Button>
+                                                </ColumnDefinition>
+                                                <ColumnDefinition Width="2*"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <WrapPanel Grid.Column="1">
+                                                <Image Height="15" Width="15" Source="/Resources/folder.png"></Image>
+                                                <Label  HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding FolderName}"></Label>
+                                            </WrapPanel>
+                                            <Grid Grid.Column="2" />
+                                        </Grid>
 
+                                        <Image  Height="15" Width="15" Margin="0,0,5,0" Source="/Resources/trash.png" HorizontalAlignment="Right" PreviewMouseDown="Image_PreviewMouseDown" DockPanel.Dock="Right"/>
+
+                                    </DockPanel>
+                                </DataTemplate>
+
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+
+                </Grid>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="1"  Margin="0 0 0 100">
+
+            <!--<Grid x:Name="NewFolderGrid" PreviewMouseDown="NewFolderGrid_PreviewMouseDown" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <StackPanel>
+                    <Border Width="90" Height="90" x:Name="NewFolderBorder" Style="{DynamicResource AnimBorders}">
+                        <Image Margin="0 5 0 0" Source="/Resources/new-folder.png" Stretch="Fill">
+                            <Image.RenderTransform>
+                                <TranslateTransform x:Name="ImageTransform2"/>
+                            </Image.RenderTransform>
+                        </Image>
+                    <Border.Triggers>
+                            <EventTrigger SourceName="NewFolderBorder" RoutedEvent="MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation
+                            Storyboard.TargetName="ImageTransform2"
+                            Storyboard.TargetProperty="Y"
+                            To="-10" Duration="0:0:0.150" />
+
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                            <EventTrigger SourceName="NewFolderBorder" RoutedEvent="MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation
+                            Storyboard.TargetName="ImageTransform2"
+                            Storyboard.TargetProperty="Y"
+                            To="0" Duration="0:0:0.150" />
+
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Border.Triggers>
+                    </Border>
+                    <TextBlock FontSize="20" Foreground="#C2C2C2" Height="29"><Run Text="New Folder"/></TextBlock>
+                </StackPanel>
+            </Grid>-->
+            <Grid  x:Name="LocalFolderGrid" PreviewMouseDown="LocalFolderGrid_PreviewMouseDown" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel>
+                    <Border x:Name="LocalBorder" Width="90" Height="90"  CornerRadius="5" Style="{DynamicResource AnimBorders}">
+                        <Image Source="/Resources/open.png" Stretch="Fill" Margin="0,0,1,0">
+                            <Image.RenderTransform>
+                                <TranslateTransform x:Name="ImageTransform"/>
+                            </Image.RenderTransform>
+                        </Image>
+                        <Border.Triggers>
+                            <EventTrigger SourceName="LocalBorder" RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                            Storyboard.TargetName="ImageTransform"
+                            Storyboard.TargetProperty="Y"
+                            To="-10" Duration="0:0:0.3" />
+
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger SourceName="LocalBorder" RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                            Storyboard.TargetName="ImageTransform"
+                            Storyboard.TargetProperty="Y"
+                            To="0" Duration="0:0:0.3" />
+                                        
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Border.Triggers>
+                    </Border>
+
+                    <TextBlock Margin="0 5" FontSize="20"  Foreground="#C2C2C2" >Open local folder</TextBlock>
+                </StackPanel>
+            </Grid>
+        </Grid>
 
     </Grid>
 </Page>

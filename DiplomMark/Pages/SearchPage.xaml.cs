@@ -23,7 +23,7 @@ namespace DiplomMark.Pages
     /// </summary>
     public partial class SearchPage : Page
     {
-        public static string catalog = Directory.GetCurrentDirectory() + "\\Photos\\"; // дефолтный каталог с фотографиями
+        public static string catalog = GlobalVars.SelectedCatalog; // дефолтный каталог с фотографиями
        
         public SearchPage()
         {

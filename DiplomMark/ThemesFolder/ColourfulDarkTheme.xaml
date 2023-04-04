@@ -67,7 +67,7 @@
                                StrokeThickness="1"
                                Stroke="{StaticResource ControlPrimaryBrightDefaultBorderBrush}"
                                SnapsToDevicePixels="true"
-                               Margin="2" />
+                                />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -4052,15 +4052,14 @@
         <Setter Property="BorderBrush" Value="{StaticResource WindowBorderColour}" />
         <Setter Property="Background" Value="{StaticResource BackgroundColour}" />
         <Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}" />
-        <Setter Property="BorderThickness" Value="1" />
+    
         <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
         <Setter Property="WindowStyle" Value="SingleBorderWindow" />
         <Setter Property="WindowChrome.WindowChrome">
             <Setter.Value>
-                <WindowChrome CaptionHeight="26"
-                              ResizeBorderThickness="6"
+                <WindowChrome 
                               CornerRadius="0"
-                              GlassFrameThickness="1"
+                          
                               NonClientFrameEdges="None"
                               UseAeroCaptionButtons="False" />
             </Setter.Value>

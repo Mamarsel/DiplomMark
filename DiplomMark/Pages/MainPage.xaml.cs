@@ -140,8 +140,8 @@ namespace DiplomMark.Pages
         /// <summary>
         /// Вывод фотографий на Canvas при переключении фото
         /// </summary>
-        /// <param NameFigure="RectangleShapesInPhoto"></param>
-        /// <param NameFigure="listrect"></param>
+        /// <param NameFigure="RectangleShapesInPhoto">Прямоугольники на фото</param>
+        /// <param NameFigure="listrect">Лист со всеми фигурами</param>
         public void PrintImagesInPhoto(List<Figure> rectangleShapesInPhoto, List<Shape> listrect)
         {
             foreach (var shapes in listrect)
@@ -150,8 +150,6 @@ namespace DiplomMark.Pages
                 {
                     if (shapes.Width == figures.ShapeFigure.Width && shapes.Height == figures.ShapeFigure.Height && shapes.Name == figures.ShapeFigure.Name)
                     {
-                        Canvas.SetLeft(shapes, figures.Coord_X);
-                        Canvas.SetTop(shapes, figures.Coord_Y);
                         shapes.Opacity = figures.FigureOpacity;
                         shapes.Width = figures.ShapeFigure.Width;
                         shapes.Height = figures.ShapeFigure.Height;
@@ -160,11 +158,10 @@ namespace DiplomMark.Pages
                         shapes.Stroke = figures.StrokeFill;
                         shapes.StrokeThickness = figures.ShapeFigure.StrokeThickness;
                         figures.ShapeFigure = shapes;
+                        Canvas.SetLeft(shapes, figures.Coord_X);
+                        Canvas.SetTop(shapes, figures.Coord_Y);
+                        Cnv.Children.Remove(shapes);
                         Cnv.Children.Add(shapes);
-                        TextBlock txtBox = new TextBlock() {  Width = 80, Text = shapes.Name, FontSize = 10, Name = shapes.Name };
-                        Cnv.Children.Add(txtBox);
-                        Canvas.SetLeft(txtBox, figures.Coord_X);
-                        Canvas.SetTop(txtBox, figures.Coord_Y);
                     }
                 }
             }
@@ -221,8 +218,6 @@ namespace DiplomMark.Pages
         /// <summary>
         /// При изменении выделенного ListBox справа автоматически устанавливаются значения NameFigure и Slider 
         /// </summary>
-        /// <param NameFigure="sender"></param>
-        /// <param NameFigure="e"></param>
         private void ListBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -236,10 +231,8 @@ namespace DiplomMark.Pages
                     NameFigure.Content = myItem.NameFigure;
                     var list = FiguresList.ListFigures;
                     foreach (var rect in list)
-                    {
                         if (rect.ShapeFigure.Name == myItem.NameFigure)
                             OpacitySlider.Value = rect.ShapeFigure.Opacity;
-                    }
                 }
             }
             catch { }
@@ -264,11 +257,11 @@ namespace DiplomMark.Pages
         {
             if (_currentSelectedListBoxItem != null)
             {
-                MyItem o = (MyItem)_currentSelectedListBoxItem.DataContext;
-                var m = FiguresList.ListFigures;
-                foreach (var rect in m)
+                MyItem selecteditem = (MyItem)_currentSelectedListBoxItem.DataContext;
+                var shapes = FiguresList.ListFigures;
+                foreach (var rect in shapes)
                 {
-                    if (rect.NameFigure == o.NameFigure)
+                    if (rect.NameFigure == selecteditem.NameFigure)
                     {
                         Color color = X12.SelectedColor.Value;
                         rect.ShapeFigure.Fill = new SolidColorBrush(Color.FromArgb(40,(byte)color.R, (byte)color.G, (byte)color.B));
@@ -353,7 +346,6 @@ namespace DiplomMark.Pages
             String sPath_SubDirectory = SearchPage.catalog + "\\" + "Saves";
             if (Directory.Exists(sPath_SubDirectory) == false)
                 Directory.CreateDirectory(sPath_SubDirectory);
-            
             File.WriteAllText(sPath_SubDirectory + "\\saves.json", JsonConvert.SerializeObject(FiguresList.ListFigures, Formatting.Indented));
             MessageBox.Show("Данные сохранены.");
         }
@@ -361,22 +353,18 @@ namespace DiplomMark.Pages
         {
             e.CanExecute = true;
         }
-        
         private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             String sPath_SubDirectory = SearchPage.catalog + "\\" + "Saves";
             if (Directory.Exists(sPath_SubDirectory) == false)
                 Directory.CreateDirectory(sPath_SubDirectory);
-            
             File.WriteAllText(sPath_SubDirectory + "\\saves.json", JsonConvert.SerializeObject(FiguresList.ListFigures));
             MessageBox.Show("Данные сохранены.");
         }
-
         private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             _R = (byte)_rand.Next(1, 255);
@@ -429,6 +417,10 @@ namespace DiplomMark.Pages
             }
             catch { }
         }
-        
+
+        private void Cnv_LostFocus(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }

@@ -4,26 +4,111 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DiplomMark"
-        Title="MarkApp" MinHeight="700" MinWidth="700" WindowState="Maximized" MouseLeftButtonDown="Window_MouseLeftButtonDown" ResizeMode="CanMinimize"
-        
+         MinHeight="700" MinWidth="700"  
+        Margin="20,0,20,0"
         AllowsTransparency="True"  
         Style="{DynamicResource CustomWindowStyle}"
         xmlns:self="clr-namespace:DiplomMark.Classes" 
-        WindowStyle="None">
+        WindowStyle="None" Padding="0">
+    <Window.Resources>
+        <Style TargetType="Border" x:Key="AnimBorders2">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
 
-    <Grid>
+
+
+                                <DoubleAnimation Duration="0:0:0.400" To="60" Storyboard.TargetProperty="Height" >
+                                    <DoubleAnimation.EasingFunction>
+                                        <CircleEase EasingMode="EaseInOut" />
+                                    </DoubleAnimation.EasingFunction>
+
+                                </DoubleAnimation>
+                                <DoubleAnimation Duration="0:0:0.400" To="60" Storyboard.TargetProperty="Width">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CircleEase EasingMode="EaseInOut" />
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+
+                                <!--<DoubleAnimation To="-10" Duration="0:0:0.2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.Y)"/>-->
+                            </Storyboard>
+
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+
+                                <DoubleAnimation Duration="0:0:0.150" To="38" Storyboard.TargetProperty="Height" />
+                                <DoubleAnimation Duration="0:0:0.150" To="38" Storyboard.TargetProperty="Width" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Image" x:Key="AnimImage">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+
+                                <DoubleAnimation Duration="0:0:0.400" To="40" Storyboard.TargetProperty="Height" >
+                                    <DoubleAnimation.EasingFunction>
+                                        <CircleEase EasingMode="EaseInOut" />
+                                    </DoubleAnimation.EasingFunction>
+
+                                </DoubleAnimation>
+                                <DoubleAnimation Duration="0:0:0.400" To="40" Storyboard.TargetProperty="Width">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CircleEase EasingMode="EaseInOut" />
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+
+                                <DoubleAnimation Duration="0:0:0.150" To="35" Storyboard.TargetProperty="Height" />
+                                <DoubleAnimation Duration="0:0:0.150" To="35" Storyboard.TargetProperty="Width" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="157*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="35*"/>
+        </Grid.ColumnDefinitions>
         <!--<Border  Width="Auto" Height="Auto" Name="windowFrame" CornerRadius="10" Grid.RowSpan="4" >
         </Border>
         <ContentControl MouseDoubleClick="ContentControl_MouseDoubleClick">
             <WrapPanel Background="Gray" VerticalAlignment="Top" Height="35"  Opacity="0.1"></WrapPanel>
         </ContentControl>-->
-        <Border Grid.Column="1" Margin="0 20 0 0"  CornerRadius="6">
+        <Border Grid.Column="1" Grid.Row="1"  CornerRadius="6" Grid.RowSpan="2">
             <Grid>
-                <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Margin="0,16,0,0" />
+                <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" />
             </Grid>
         </Border>
-
-
+        <Grid Background="#202020" HorizontalAlignment="Left" Width="50" Grid.Row="1" Grid.Column="0">
+            <Image PreviewMouseDown="Image_PreviewMouseDown" Margin="0 5 0 0" VerticalAlignment="Top" HorizontalAlignment="Center" Source="/Resources/HomeIcon.png" Style="{DynamicResource AnimImage}" Stretch="UniformToFill"  Height="34"  Width="34"  />
+            <Image Margin="0 0 0 5" VerticalAlignment="Bottom" Source="/Resources/SettingIcon.png" Style="{DynamicResource AnimImage}" Width="35" Height="35" Stretch="UniformToFill"></Image>
+        </Grid>
+        <Grid Background="#292929" Grid.ColumnSpan="2">
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF797979" Height="30" Width="86" FontSize="16">MarkApp</TextBlock>
+        </Grid>
 
         <!--<WrapPanel Margin="0 10 20 0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Height="20">
 

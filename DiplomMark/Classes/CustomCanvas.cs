@@ -18,7 +18,6 @@ namespace DiplomMark.Classes
         private Rectangle currentRectangle;
         public static Rectangle selectedRectangle;
         private Point currentMousePosition;
-        private List<Rectangle> rectangles = new List<Rectangle>();
         private double _mouseDownDistanceThreshold = 2;
         private  MainPage _main;
 
@@ -31,16 +30,12 @@ namespace DiplomMark.Classes
         static byte B;
         public CustomCanvas()
         {
-            Keyboard.Focus(this);
-            this.Focusable = true;
-            this.Focus();
             this.Background = Brushes.White;
             this.MouseLeftButtonDown += OnMouseLeftButtonDown;
             this.MouseLeftButtonUp += OnMouseLeftButtonUp;
             this.MouseMove += OnMouseMove;
             this.PreviewMouseLeftButtonUp += OnPreviewMouseLeftButtonUp;
             this.PreviewKeyDown += MainWindow_PreviewKeyDown;
-
         }
 
         private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -53,9 +48,9 @@ namespace DiplomMark.Classes
             currentMousePosition = startPoint;
             if (Keyboard.Modifiers == ModifierKeys.Control)
             {
-                foreach (Rectangle rectangle in rectangles)
+                foreach (Figure rectangle in FiguresList.ListFigures)
                 {
-                    if (rectangle.IsMouseOver)
+                    if (rectangle.ShapeFigure.IsMouseOver)
                     {
                         if (selectedRectangle != null)
                         {
@@ -64,7 +59,7 @@ namespace DiplomMark.Classes
                             selectedRectangle.Fill = new SolidColorBrush(Color.FromArgb(40, R, G, B));
                             selectedRectangle.StrokeThickness = 1;
                         }
-                        selectedRectangle = rectangle;
+                        selectedRectangle = (Rectangle)rectangle.ShapeFigure;
                         selectedRectangle.Fill = new SolidColorBrush(Color.FromArgb(125, 0, 0, 255));
                         selectedRectangle.StrokeThickness = 2;
                         break;
@@ -85,14 +80,12 @@ namespace DiplomMark.Classes
                 Canvas.SetLeft(currentRectangle, startPoint.X);
                 Canvas.SetTop(currentRectangle, startPoint.Y);
                 this.Children.Add(currentRectangle);
-
-
                 _main.AddElementToListBox(
                new MyItem
                {
                    Counter = counter,
                    TypeFigure = $"{currentRectangle.GetType().Name.ToUpper()} SHAPE",
-                   BackgroundGrid = new SolidColorBrush(Color.FromRgb(R, G, B)),
+                   BackgroundGrid = currentRectangle.Fill,
                    FigureShape = currentRectangle,
                    NameFigure = currentRectangle.Name
                });
@@ -107,11 +100,8 @@ namespace DiplomMark.Classes
                 currentMousePosition = e.GetPosition(this);
                 _coordX = Math.Min(startPoint.X, currentMousePosition.X);
                 _coordY = Math.Min(startPoint.Y, currentMousePosition.Y);
-
                 currentRectangle.Width = Math.Abs(currentMousePosition.X - startPoint.X);
                 currentRectangle.Height = Math.Abs(currentMousePosition.Y - startPoint.Y);
-
-
                 Canvas.SetLeft(currentRectangle, _coordX);
                 Canvas.SetTop(currentRectangle, _coordY);
             }
@@ -132,12 +122,11 @@ namespace DiplomMark.Classes
             {
                 if (currentRectangle.Width > _mouseDownDistanceThreshold || currentRectangle.Height > _mouseDownDistanceThreshold)
                 {
-                    var a = (MyItem)_main.ListBoxAllElements.Items[_main.ListBoxAllElements.Items.Count - 1];
                     FiguresList.AddFigure(ShapeFigure.ShapeToFigure(currentRectangle, Math.Round(_coordX, 4), Math.Round(_coordY, 4), MainPage.Paths[MainPage.CounterImage - 1], currentRectangle.Name, currentRectangle.Opacity, currentRectangle.Stroke));
                     _main.OpacitySlider.Value = currentRectangle.Opacity;
                     MainPage.MainPageController.X12.SelectedColor = Color.FromRgb(R, G, B);
                     MainPage.MainPageController.PreviewColorBorder.Background = new SolidColorBrush(Color.FromRgb(R, G, B));
-                    rectangles.Add(currentRectangle);
+                    FiguresList.ListFigures.Add(ShapeFigure.ShapeToFigure(currentRectangle, _coordX, _coordY, MainPage.Paths[MainPage.CounterImage-1], currentRectangle.Name, currentRectangle.Opacity,currentRectangle.Stroke));
                     currentRectangle = null;
                 }
                 else
@@ -166,7 +155,6 @@ namespace DiplomMark.Classes
                 FiguresList.ListFigures.Remove(FiguresList.ListFigures.FirstOrDefault(x=>x.ShapeFigure == selectedRectangle));
                 MainPage.MainPageController.RefreshListBox();
                 selectedRectangle = null;
-
             }
         }
 

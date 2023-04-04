@@ -7,7 +7,7 @@
 
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/ThemesFolder/ColourfulDarkTheme.xaml"/>
+                <ResourceDictionary Source="/ThemesFolder/DarkTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
 
@@ -18,18 +18,29 @@
                         <Trigger.EnterActions>
                             <BeginStoryboard>
                                 <Storyboard>
-                                    <ThicknessAnimation Duration="0:0:0.400" To="3" Storyboard.TargetProperty="BorderThickness" />
-                                    <DoubleAnimation Duration="0:0:0.100" To="48" Storyboard.TargetProperty="Height" />
-                                    <DoubleAnimation Duration="0:0:0.100" To="60" Storyboard.TargetProperty="Width" />
+                                    <DoubleAnimation Duration="0:0:0.400" To="105" Storyboard.TargetProperty="Height" >
+                                        <DoubleAnimation.EasingFunction>
+                                            <CircleEase EasingMode="EaseInOut" />
+                                        </DoubleAnimation.EasingFunction>
+
+                                    </DoubleAnimation>
+                                    <DoubleAnimation Duration="0:0:0.400" To="105" Storyboard.TargetProperty="Width">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CircleEase EasingMode="EaseInOut" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+
+                                    <!--<DoubleAnimation To="-10" Duration="0:0:0.2" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.Y)"/>-->
                                 </Storyboard>
+                                
                             </BeginStoryboard>
                         </Trigger.EnterActions>
                         <Trigger.ExitActions>
                             <BeginStoryboard>
                                 <Storyboard>
                                     <ThicknessAnimation Duration="0:0:0.250" To="0" Storyboard.TargetProperty="BorderThickness" />
-                                    <DoubleAnimation Duration="0:0:0.150" To="40" Storyboard.TargetProperty="Height" />
-                                    <DoubleAnimation Duration="0:0:0.150" To="50" Storyboard.TargetProperty="Width" />
+                                    <DoubleAnimation Duration="0:0:0.150" To="90" Storyboard.TargetProperty="Height" />
+                                    <DoubleAnimation Duration="0:0:0.150" To="90" Storyboard.TargetProperty="Width" />
                                 </Storyboard>
                             </BeginStoryboard>
                         </Trigger.ExitActions>
@@ -184,7 +195,7 @@
                 <Setter Property="Padding" Value="4,1"/>
                 <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
                 <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
-                <Setter Property="Background" Value="{Binding backgroundGrid}"/>
+                <Setter Property="Background" Value="{Binding BackgroundGrid}"/>
                 <Setter Property="BorderBrush" Value="Transparent"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>

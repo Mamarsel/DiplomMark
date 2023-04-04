@@ -45,7 +45,7 @@
                         <ColumnDefinition Width="22*"/>
                         <ColumnDefinition Width="63*"/>
                     </Grid.ColumnDefinitions>
-                    <Border  Grid.Column="0" Grid.Row="0" Background="{Binding backgroundGrid}" BorderBrush="Black" BorderThickness="0.8" x:Name="PreviewColorBorder"></Border>
+                    <Border  Grid.Column="0" Grid.Row="0" Background="{Binding BackgroundGrid}" BorderBrush="Black" BorderThickness="0.8" x:Name="PreviewColorBorder"></Border>
                     <xctk:ColorPicker Background="#424242"  HeaderForeground="#FFEBEBEB"  TabForeground="#FFEBEBEB" Foreground="#FFEBEBEB" HeaderBackground="#363535" TabBackground="#363535" DropDownBackground="#292929"   FocusManager.FocusedElement="{Binding ElementName=ListBoxAllElements}" ColorMode="ColorCanvas"  Height="25"   x:Name="X12" SelectedColorChanged="X12_SelectedColorChanged"  Grid.Row="1"/>
                     <Label  x:Name="NameFigure" FontFamily="Roboto" FontSize="18" FontWeight="Bold" Grid.ColumnSpan="2" Margin="88,0,0,31"></Label>
                     <Slider Grid.Column="1" Grid.Row="1"  Margin="5" Maximum="1" x:Name="OpacitySlider" ValueChanged="OpacitySlider_ValueChanged" TickFrequency="0.1"></Slider>
@@ -136,7 +136,7 @@
 
                         </Image>
                     </Viewbox>
-                    <local:CustomCanvas Background="Transparent"  x:Name="Cnv">
+                    <local:CustomCanvas LostFocus="Cnv_LostFocus"  Background="Transparent"  x:Name="Cnv">
 
                         
                     </local:CustomCanvas>

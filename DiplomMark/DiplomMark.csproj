@@ -9,17 +9,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ThemesFolder\ColourfulDarkTheme.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\add-folder.png" />
     <None Remove="Resources\correct.png" />
-    <None Remove="Resources\ellipseIcon.png" />
-    <None Remove="Resources\ellipseSelect.png" />
+    <None Remove="Resources\folder.png" />
+    <None Remove="Resources\HomeIcon.png" />
     <None Remove="Resources\InconRect.png" />
-    <None Remove="Resources\ju.jpg" />
     <None Remove="Resources\logo.png" />
     <None Remove="Resources\logo2.png" />
+    <None Remove="Resources\new-folder.png" />
+    <None Remove="Resources\open.png" />
+    <None Remove="Resources\PinkHomeIcon.png" />
     <None Remove="Resources\RectangleIcon.png" />
     <None Remove="Resources\remove.png" />
     <None Remove="Resources\save.png" />
     <None Remove="Resources\select.png" />
+    <None Remove="Resources\SettingIcon.png" />
+    <None Remove="Resources\trash.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="ThemesFolder\ColourfulDarkTheme.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +40,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\add-folder.png" />
+    <Resource Include="Resources\HomeIcon.png" />
+    <Resource Include="Resources\folder.png" />
+    <Resource Include="Resources\PinkHomeIcon.png" />
+    <Resource Include="Resources\new-folder.png" />
+    <Resource Include="Resources\open.png" />
     <Resource Include="Resources\save.png" />
   </ItemGroup>
 
@@ -44,10 +63,6 @@
 
   <ItemGroup>
     <Resource Include="Resources\logo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Resources\ju.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -76,8 +91,8 @@
 
   <ItemGroup>
     <Resource Include="Resources\correct.png" />
-    <Resource Include="Resources\ellipseIcon.png" />
-    <Resource Include="Resources\ellipseSelect.png" />
+    <Resource Include="Resources\SettingIcon.png" />
+    <Resource Include="Resources\trash.png" />
   </ItemGroup>
 
 </Project>
