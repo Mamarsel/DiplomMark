@@ -25,9 +25,9 @@ namespace DiplomMark.Classes
 
         Random r = new();
         int counter = 1;
-        static byte R;
-        static byte G;
-        static byte B;
+        //static byte R;
+        //static byte G;
+        //static byte B;
         public CustomCanvas()
         {
             this.Background = Brushes.White;
@@ -40,9 +40,11 @@ namespace DiplomMark.Classes
 
         private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            R = (byte)r.Next(1, 255);
-            G = (byte)r.Next(1, 255);
-            B = (byte)r.Next(1, 233);
+            if (GlobalVars.SelectedTag == null)
+                return;
+            //R = (byte)r.Next(1, 255);
+            //G = (byte)r.Next(1, 255);
+            //B = (byte)r.Next(1, 233);
             _main = MainPage.MainPageController;
             startPoint = e.GetPosition(this);
             currentMousePosition = startPoint;
@@ -54,9 +56,9 @@ namespace DiplomMark.Classes
                     {
                         if (selectedRectangle != null)
                         {
-                            selectedRectangle.Stroke = new SolidColorBrush(Color.FromRgb(R, G, B));
-                            selectedRectangle.Name = "Rectangle" + counter;
-                            selectedRectangle.Fill = new SolidColorBrush(Color.FromArgb(40, R, G, B));
+                            selectedRectangle.Stroke = GlobalVars.SelectedTag.TagColor;
+                            selectedRectangle.Fill = GlobalVars.SelectedTag.TagColor;
+                            selectedRectangle.Fill.Opacity = 0.4;
                             selectedRectangle.StrokeThickness = 1;
                         }
                         selectedRectangle = (Rectangle)rectangle.ShapeFigure;
@@ -71,26 +73,25 @@ namespace DiplomMark.Classes
                 counter++;
                 currentRectangle = new Rectangle
                 {
-                    Stroke = new SolidColorBrush(Color.FromRgb(R, G, B)),
+                    Stroke = GlobalVars.SelectedTag.TagColor,
                     StrokeThickness = 2,
-                    Fill = new SolidColorBrush(Color.FromArgb(40, R, G, B)),
+                    Fill = GlobalVars.SelectedTag.TagColor,
                     Opacity = 0.6,
-                    Name = "Rectangle" + counter
+                    Name = GlobalVars.SelectedTag.TagName
                 };
                 Canvas.SetLeft(currentRectangle, startPoint.X);
                 Canvas.SetTop(currentRectangle, startPoint.Y);
                 this.Children.Add(currentRectangle);
-                _main.AddElementToListBox(
-               new MyItem
-               {
-                   Counter = counter,
-                   TypeFigure = $"{currentRectangle.GetType().Name.ToUpper()} SHAPE",
-                   BackgroundGrid = currentRectangle.Fill,
-                   FigureShape = currentRectangle,
-                   NameFigure = currentRectangle.Name
-               });
-                _main.ListBoxAllElements.SelectedIndex = _main.ListBoxAllElements.Items.Count - 1;
-
+                //_main.AddElementToListBox(
+                //    new MyItem
+                //    {
+                //        Counter = counter,
+                //        TypeFigure = $"{currentRectangle.GetType().Name.ToUpper()} SHAPE",
+                //        BackgroundGrid = currentRectangle.Fill,
+                //        FigureShape = currentRectangle,
+                //        NameFigure = currentRectangle.Name
+                //    });
+                //_main.ListBoxAllElements.SelectedIndex = _main.ListBoxAllElements.Items.Count - 1;
             }
         }
         private void OnMouseMove(object sender, MouseEventArgs e)
@@ -124,9 +125,8 @@ namespace DiplomMark.Classes
                 {
                     FiguresList.AddFigure(ShapeFigure.ShapeToFigure(currentRectangle, Math.Round(_coordX, 4), Math.Round(_coordY, 4), MainPage.Paths[MainPage.CounterImage - 1], currentRectangle.Name, currentRectangle.Opacity, currentRectangle.Stroke));
                     _main.OpacitySlider.Value = currentRectangle.Opacity;
-                    MainPage.MainPageController.X12.SelectedColor = Color.FromRgb(R, G, B);
-                    MainPage.MainPageController.PreviewColorBorder.Background = new SolidColorBrush(Color.FromRgb(R, G, B));
-                    FiguresList.ListFigures.Add(ShapeFigure.ShapeToFigure(currentRectangle, _coordX, _coordY, MainPage.Paths[MainPage.CounterImage-1], currentRectangle.Name, currentRectangle.Opacity,currentRectangle.Stroke));
+                    MainPage.MainPageController.X12.SelectedColor = GlobalVars.SelectedTag.TagColor.Color;
+                    MainPage.MainPageController.PreviewColorBorder.Background = GlobalVars.SelectedTag.TagColor;
                     currentRectangle = null;
                 }
                 else

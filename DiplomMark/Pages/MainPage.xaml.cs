@@ -1,5 +1,4 @@
-﻿
-using DiplomMark.Classes;
+﻿using DiplomMark.Classes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -31,7 +30,7 @@ namespace DiplomMark.Pages
         public static int GroupIDCounter      = 1;
         public static List<Figure> RectangleShapesInPhoto = new();
         public static List<string> Paths = new();
-        private static List<SelectImages> _images = new();
+        private static string[] _images;
 
         int counter = 0;
         int currentPageIndex = 0;
@@ -44,7 +43,7 @@ namespace DiplomMark.Pages
         static byte _B;
         List<BitmapImage> _itemsList = new();
         static ListBoxItem _currentSelectedListBoxItem;
-        public MainPage(List<SelectImages> images)
+        public MainPage(string[] images)
         {
             InitializeComponent();
             Cnv.Focus();
@@ -53,8 +52,8 @@ namespace DiplomMark.Pages
             MyCommand.InputGestures.Add(new KeyGesture(Key.Z, ModifierKeys.Control));
             #region Пагинирование
             AddPaths(_images);
-            ImagePreview.Source = ImageController.FromFile(Paths[CounterImage]);
-            MaxPhotosLabel.Content = Paths.Count;
+            ImagePreview.Source = ImageController.FromFile(Paths[CounterImage-1]);
+            //MaxPhotosLabel.Content = Paths.Count;
             totalCount = Paths.Count;
             totalPage = totalCount / itemPerPage;
             if (totalCount % itemPerPage != 0)
@@ -63,7 +62,7 @@ namespace DiplomMark.Pages
             }
             foreach (var fi in _images)
             {
-                _itemsList.Add(new BitmapImage(new Uri(fi.URIToFile)));
+                _itemsList.Add(new BitmapImage(new Uri(fi)));
             }
             for (int i = 0; i < _itemsList.ToList().Take(10).Count(); i++)
             {
@@ -73,13 +72,14 @@ namespace DiplomMark.Pages
             #endregion
             OpenToSave();
             MainPageController = this;
+            ListBoxAllElements.Focus();
         }
         /// <summary>
         /// Восстановление сохранения при открытии
         /// </summary>
         private void OpenToSave()
         {
-            String sPath_SubDirectory = SearchPage.catalog + "Saves";
+            String sPath_SubDirectory = SearchPage.SelectedCatalogs + "Saves";
             if (Directory.Exists(sPath_SubDirectory) == false) return;
             if (File.Exists(sPath_SubDirectory + "\\saves.json"))
             {
@@ -92,15 +92,20 @@ namespace DiplomMark.Pages
                 RefreshListBox();
             }
         }
+        private void AddTagsSave(List<Figure> figures)
+        {
+            List<Figure> uniqueFigureNames = figures.Distinct().ToList();
+
+        }
         /// <summary>
         /// Добавление ссылок фотографии в List
         /// </summary>
         /// <param NameFigure="images"></param>
-        private void AddPaths(List<SelectImages> images)
+        private void AddPaths(string[] images)
         {
             foreach (var fi in images)
             {
-                Paths.Add(fi.URIToFile);
+                Paths.Add(fi);
             }
         }
         /// <summary>
@@ -170,7 +175,7 @@ namespace DiplomMark.Pages
         #region Перелистывание фоток
         private void LabelNext_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (CounterImage < Convert.ToInt32(MaxPhotosLabel.Content))
+            if (CounterImage < Convert.ToInt32(Paths.Count))
             {
                 CounterImage++;
                 Cnv.Children.Clear();
@@ -183,7 +188,7 @@ namespace DiplomMark.Pages
                     PaginationListbox(true);
                     Thumbnails.SelectedIndex = 0;
                 }
-                CounterLabel.Content = CounterImage;
+                //CounterLabel.Content = CounterImage;
                 ImagePreview.Source = ImageController.CorrectingImage(Paths, CounterImage-1);
             }
         }
@@ -202,7 +207,7 @@ namespace DiplomMark.Pages
                     PaginationListbox(false);
                     Thumbnails.SelectedIndex = 9;
                 }
-                CounterLabel.Content = CounterImage;
+                //CounterLabel.Content = CounterImage;
                 ImagePreview.Source =  ImageController.CorrectingImage(Paths, CounterImage - 1);
             }
         }
@@ -225,13 +230,14 @@ namespace DiplomMark.Pages
                 _currentSelectedListBoxItem = ListBoxAllElements.ItemContainerGenerator.ContainerFromIndex(ListBoxAllElements.SelectedIndex) as ListBoxItem;
                 if (_currentSelectedListBoxItem != null)
                 {
-                    string colorValue = ((SolidColorBrush)_currentSelectedListBoxItem.Background).Color.ToString();
-                    X12.SelectedColor = (Color)ColorConverter.ConvertFromString(colorValue);
-                    MyItem myItem = (MyItem)_currentSelectedListBoxItem.DataContext;
-                    NameFigure.Content = myItem.NameFigure;
+                    //string colorValue = ((SolidColorBrush)_currentSelectedListBoxItem.Background).Color.ToString();
+                    //X12.SelectedColor = (Color)ColorConverter.ConvertFromString(colorValue);
+                    TagClass myItem = (TagClass)_currentSelectedListBoxItem.DataContext;
+                    GlobalVars.SelectedTag = myItem;
+                    NameFigure.Content = myItem.TagName;
                     var list = FiguresList.ListFigures;
                     foreach (var rect in list)
-                        if (rect.ShapeFigure.Name == myItem.NameFigure)
+                        if (rect.ShapeFigure.Name == myItem.TagName)
                             OpacitySlider.Value = rect.ShapeFigure.Opacity;
                 }
             }
@@ -239,14 +245,14 @@ namespace DiplomMark.Pages
         }
         public void RefreshListBox()
         {
-            ListBoxAllElements.Items.Clear();
-            var zxibit = FiguresList.ListFigures.Where(x => x.ToFileName == Paths[CounterImage-1]).ToList();
-            counter = 1;
-            foreach (var x in zxibit)
-            {
-                ListBoxAllElements.Items.Add(new MyItem { Counter = counter, TypeFigure = "Rectangle" + counter, NameFigure = x.NameFigure, BackgroundGrid = x.ColorFill, FigureShape = x.ShapeFigure });
-                counter++;
-            }
+            //ListBoxAllElements.Items.Clear();
+            //var zxibit = FiguresList.ListFigures.Where(x => x.ToFileName == Paths[CounterImage-1]).ToList();
+            //counter = 1;
+            //foreach (var x in zxibit)
+            //{
+            //    ListBoxAllElements.Items.Add(new TagClass { Counter = counter, TypeFigure = "Rectangle" + counter, NameFigure = x.NameFigure, BackgroundGrid = x.ColorFill, FigureShape = x.ShapeFigure });
+            //    counter++;
+            //}
         }
         /// <summary>
         /// Выбор цвета фигуры
@@ -255,29 +261,29 @@ namespace DiplomMark.Pages
         /// <param NameFigure="e"></param>
         private void X12_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
-            if (_currentSelectedListBoxItem != null)
-            {
-                MyItem selecteditem = (MyItem)_currentSelectedListBoxItem.DataContext;
-                var shapes = FiguresList.ListFigures;
-                foreach (var rect in shapes)
-                {
-                    if (rect.NameFigure == selecteditem.NameFigure)
-                    {
-                        Color color = X12.SelectedColor.Value;
-                        rect.ShapeFigure.Fill = new SolidColorBrush(Color.FromArgb(40,(byte)color.R, (byte)color.G, (byte)color.B));
-                        rect.ShapeFigure.Stroke = new SolidColorBrush(Color.FromRgb((byte)color.R, (byte)color.G, (byte)color.B));
-                        _currentSelectedListBoxItem.Background = new SolidColorBrush(Color.FromArgb((byte)125, (byte)color.R, (byte)color.G, (byte)color.B));
-                        PreviewColorBorder.Background = new SolidColorBrush(Color.FromRgb((byte)color.R, (byte)color.G, (byte)color.B));
-                    }
-                }
-            }
+            //if (_currentSelectedListBoxItem != null)
+            //{
+            //    MyItem selecteditem = (MyItem)_currentSelectedListBoxItem.DataContext;
+            //    var shapes = FiguresList.ListFigures;
+            //    foreach (var rect in shapes)
+            //    {
+            //        if (rect.NameFigure == selecteditem.NameFigure)
+            //        {
+            //            Color color = X12.SelectedColor.Value;
+            //            rect.ShapeFigure.Fill = new SolidColorBrush(Color.FromArgb(40,(byte)color.R, (byte)color.G, (byte)color.B));
+            //            rect.ShapeFigure.Stroke = new SolidColorBrush(Color.FromRgb((byte)color.R, (byte)color.G, (byte)color.B));
+            //            _currentSelectedListBoxItem.Background = new SolidColorBrush(Color.FromArgb((byte)125, (byte)color.R, (byte)color.G, (byte)color.B));
+            //            PreviewColorBorder.Background = new SolidColorBrush(Color.FromRgb((byte)color.R, (byte)color.G, (byte)color.B));
+            //        }
+            //    }
+            //}
         }
         private void Thumbnails_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (Thumbnails.SelectedItem != null)
             { 
                 CounterImage = Thumbnails.SelectedIndex + 1 + currentPageIndex * 10;
-                CounterLabel.Content = CounterImage.ToString();
+                //CounterLabel.Content = CounterImage.ToString();
                 Cnv.Children.Clear();
                 ImagePreview.Source = ImageController.CorrectingImage(Paths, CounterImage-1);
                 RectangleShapesInPhoto = TransformFigureTo.ListRectangleInPhoto(FiguresList.ListFigures, Paths, CounterImage-1);
@@ -292,33 +298,21 @@ namespace DiplomMark.Pages
             ListBoxAllElements.Items.Add(myItem);
         }
         
-        private void ExitCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            RectangleShapesInPhoto = TransformFigureTo.ListRectangleInPhoto(FiguresList.ListFigures, Paths, CounterImage-1);
-            var ShapeFigures = RectangleShapesInPhoto.Select(x => x.ShapeFigure).ToList();
-            if (ShapeFigures.Count > 0)
-            {
-                Cnv.Children.Remove(ShapeFigures.Last());
-                FiguresList.ListFigures.Remove(RectangleShapesInPhoto.Last());
-                ListBoxAllElements.Items.RemoveAt(ListBoxAllElements.Items.Count - 1);
-            }
-        }
-       
         private void OpacitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (_currentSelectedListBoxItem != null)
-            {
-                MyItem o = (MyItem)_currentSelectedListBoxItem.DataContext;
-                var itema = FiguresList.ListFigures;
-                foreach (var rect in itema)
-                {
-                    if (rect.NameFigure == o.NameFigure)
-                    {
-                        rect.ShapeFigure.Opacity = OpacitySlider.Value;
-                        rect.FigureOpacity = OpacitySlider.Value;
-                    }
-                }
-            }
+            //if (_currentSelectedListBoxItem != null)
+            //{
+            //    MyItem o = (MyItem)_currentSelectedListBoxItem.DataContext;
+            //    var itema = FiguresList.ListFigures;
+            //    foreach (var rect in itema)
+            //    {
+            //        if (rect.NameFigure == o.NameFigure)
+            //        {
+            //            rect.ShapeFigure.Opacity = OpacitySlider.Value;
+            //            rect.FigureOpacity = OpacitySlider.Value;
+            //        }
+            //    }
+            //}
         }
         private void NameFigureTB_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -343,7 +337,7 @@ namespace DiplomMark.Pages
         }
         private void SaveAllBtn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            String sPath_SubDirectory = SearchPage.catalog + "\\" + "Saves";
+            String sPath_SubDirectory = SearchPage.SelectedCatalogs + "\\" + "Saves";
             if (Directory.Exists(sPath_SubDirectory) == false)
                 Directory.CreateDirectory(sPath_SubDirectory);
             File.WriteAllText(sPath_SubDirectory + "\\saves.json", JsonConvert.SerializeObject(FiguresList.ListFigures, Formatting.Indented));
@@ -355,7 +349,7 @@ namespace DiplomMark.Pages
         }
         private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            String sPath_SubDirectory = SearchPage.catalog + "\\" + "Saves";
+            String sPath_SubDirectory = SearchPage.SelectedCatalogs + "\\" + "Saves";
             if (Directory.Exists(sPath_SubDirectory) == false)
                 Directory.CreateDirectory(sPath_SubDirectory);
             File.WriteAllText(sPath_SubDirectory + "\\saves.json", JsonConvert.SerializeObject(FiguresList.ListFigures));
@@ -364,49 +358,6 @@ namespace DiplomMark.Pages
         private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
-        }
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            _R = (byte)_rand.Next(1, 255);
-            _G = (byte)_rand.Next(1, 255);
-            _B = (byte)_rand.Next(1, 233);
-            using var yolo = new Classes.Yolo.Models.Yolov8Net(Directory.GetCurrentDirectory() + @"\Assets\Weights\yolov8m.onnx");
-            Image img = Image.FromFile(Paths[CounterImage - 1]);
-            using var image = Image.FromFile(Paths[CounterImage-1]);
-            var predictions = yolo.Predict(img);
-            foreach (var pred in predictions)
-            {
-                GroupIDCounter++;
-                var originalImageHeight = img.Height;
-                var originalImageWidth  = img.Width;
-                var x      = Math.Max(pred.Rectangle.X, 0);
-                var y      = Math.Max(pred.Rectangle.Y, 0);
-                var width  = Math.Min(originalImageWidth - x, pred.Rectangle.Width);
-                var height = Math.Min(originalImageHeight - y, pred.Rectangle.Height);
-                var name   = pred.Label.Name.Replace(" ", "_");
-                var ShapeCurrent = new Rectangle();
-                Canvas.SetLeft(ShapeCurrent, x);
-                Canvas.SetTop(ShapeCurrent, y);
-                ShapeCurrent.Width   = width;
-                ShapeCurrent.Height  = height;
-                ShapeCurrent.StrokeThickness = 2;
-                ShapeCurrent.Stroke  = new SolidColorBrush(Color.FromRgb(_R, _G, _B));
-                ShapeCurrent.Fill    = new SolidColorBrush(Color.FromArgb(40, _R,_B,_G));
-                ShapeCurrent.Name    = name;
-                Canvas.SetLeft(ShapeCurrent, x);
-                Canvas.SetTop(ShapeCurrent, y);
-                TextBlock textblock = new();
-                Canvas.SetLeft(textblock, x);
-                Canvas.SetTop(textblock, y);
-                textblock.Text = name;
-                textblock.Name = name;
-                AddChild(ShapeCurrent, GroupIDCounter);
-                AddChild(textblock, GroupIDCounter);
-                FiguresList.AddFigure(ShapeFigure.ShapeToFigure(ShapeCurrent, Math.Round(x, 4), Math.Round(y, 4), Paths[CounterImage-1], ShapeCurrent.Name, ShapeCurrent.Opacity, ShapeCurrent.Stroke));
-                OpacitySlider.Value = ShapeCurrent.Opacity;
-                RefreshListBox();
-                
-            }
         }
         public void AddChild(UIElement element, Int32 groupID)
         {
@@ -417,10 +368,121 @@ namespace DiplomMark.Pages
             }
             catch { }
         }
-
-        private void Cnv_LostFocus(object sender, RoutedEventArgs e)
+        private void ExitCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            
+            e.CanExecute = true;
+        }
+        private void ExitCommand_Executed_1(object sender, ExecutedRoutedEventArgs e)
+        {
+            RectangleShapesInPhoto = TransformFigureTo.ListRectangleInPhoto(FiguresList.ListFigures, Paths, CounterImage - 1);
+            var ShapeFigures = RectangleShapesInPhoto.Select(x => x.ShapeFigure).ToList();
+            if (ShapeFigures.Count > 0)
+            {
+                Cnv.Children.Remove(ShapeFigures.Last());
+                FiguresList.ListFigures.Remove(RectangleShapesInPhoto.Last());
+                ListBoxAllElements.Items.RemoveAt(ListBoxAllElements.Items.Count - 1);
+            }
+        }
+
+        private void SaveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+            String sPath_SubDirectory = SearchPage.SelectedCatalogs + "\\" + "Saves";
+            if (Directory.Exists(sPath_SubDirectory) == false)
+                Directory.CreateDirectory(sPath_SubDirectory);
+            File.WriteAllText(sPath_SubDirectory + "\\saves.json", JsonConvert.SerializeObject(FiguresList.ListFigures));
+            MessageBox.Show("Данные сохранены.");
+        }
+
+        private void SaveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void AIBTN_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _R = (byte)_rand.Next(1, 255);
+            _G = (byte)_rand.Next(1, 255);
+            _B = (byte)_rand.Next(1, 233);
+            using var yolo = new Classes.Yolo.Models.Yolov8Net(Directory.GetCurrentDirectory() + @"\Assets\Weights\yolov8m.onnx");
+            Image img = Image.FromFile(Paths[CounterImage - 1]);
+            using var image = Image.FromFile(Paths[CounterImage - 1]);
+            var predictions = yolo.Predict(img);
+            foreach (var pred in predictions)
+            {
+                GroupIDCounter++;
+                var originalImageHeight = img.Height;
+                var originalImageWidth = img.Width;
+                var x = Math.Max(pred.Rectangle.X, 0);
+                var y = Math.Max(pred.Rectangle.Y, 0);
+                var width = Math.Min(originalImageWidth - x, pred.Rectangle.Width);
+                var height = Math.Min(originalImageHeight - y, pred.Rectangle.Height);
+                var name = pred.Label.Name.Replace(" ", "_");
+                var ShapeCurrent = new Rectangle();
+                Canvas.SetLeft(ShapeCurrent, x);
+                Canvas.SetTop(ShapeCurrent, y);
+                ShapeCurrent.Width = width;
+                ShapeCurrent.Height = height;
+                ShapeCurrent.StrokeThickness = 2;
+                ShapeCurrent.Stroke = new SolidColorBrush(Color.FromRgb(_R, _G, _B));
+                ShapeCurrent.Fill = new SolidColorBrush(Color.FromArgb(40, _R, _B, _G));
+                ShapeCurrent.Name = name;
+                Canvas.SetLeft(ShapeCurrent, x);
+                Canvas.SetTop(ShapeCurrent, y);
+                TextBlock textblock = new();
+                Canvas.SetLeft(textblock, x);
+                Canvas.SetTop(textblock, y);
+                textblock.Text = name;
+                textblock.Name = name;
+                AddChild(ShapeCurrent, GroupIDCounter);
+                AddChild(textblock, GroupIDCounter);
+                FiguresList.AddFigure(ShapeFigure.ShapeToFigure(ShapeCurrent, Math.Round(x, 4), Math.Round(y, 4), Paths[CounterImage - 1], ShapeCurrent.Name, ShapeCurrent.Opacity, ShapeCurrent.Stroke));
+                OpacitySlider.Value = ShapeCurrent.Opacity;
+                RefreshListBox();
+
+            }
+        }
+
+        private void NextPhotoImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (CounterImage < Convert.ToInt32(Paths.Count))
+            {
+                CounterImage++;
+                Cnv.Children.Clear();
+                RectangleShapesInPhoto = TransformFigureTo.ListRectangleInPhoto(FiguresList.ListFigures, Paths, CounterImage - 1);
+                var listrect = TransformFigureTo.ListToPrintShapes(RectangleShapesInPhoto);
+                PrintImagesInPhoto(RectangleShapesInPhoto, listrect);
+                Thumbnails.SelectedIndex = (CounterImage < 10) ? CounterImage - 1 : (CounterImage - 1) % 10;
+                if ((CounterImage - 1) % 10 == 0)
+                {
+                    PaginationListbox(true);
+                    Thumbnails.SelectedIndex = 0;
+                }
+                //CounterLabel.Content = CounterImage;
+                ImagePreview.Source = ImageController.CorrectingImage(Paths, CounterImage - 1);
+            }
+        }
+        private void NewPhotosImage_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MainWindow.main.MainFrame.Navigate(new SearchPage(Paths.ToArray()));
+        }
+
+        public static bool IsWindowOpen<T>(string name = "") where T : Window
+        {
+            return string.IsNullOrEmpty(name)
+               ? Application.Current.Windows.OfType<T>().Any()
+               : Application.Current.Windows.OfType<T>().Any(w => w.Name.Equals(name));
+        }
+
+        private void Label_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            TagAddWindow m = new TagAddWindow();
+            if (!GlobalVars.IsWindowTagOpen)
+            {
+                m.Show();
+                GlobalVars.IsWindowTagOpen = true;
+            }
+
         }
     }
 }

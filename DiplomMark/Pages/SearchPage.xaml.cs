@@ -15,6 +15,7 @@ using DiplomMark.Classes;
 using Path = System.IO.Path;
 using Medallion.Shell;
 using System.Threading.Tasks;
+using System.Security.Policy;
 
 namespace DiplomMark.Pages
 {
@@ -23,76 +24,37 @@ namespace DiplomMark.Pages
     /// </summary>
     public partial class SearchPage : Page
     {
-        public static string catalog = GlobalVars.SelectedCatalog; // дефолтный каталог с фотографиями
+        public static string SelectedCatalogs = GlobalVars.SelectedCatalog; // дефолтный каталог с фотографиями
+        private string[] _existFiles;
        
-        public SearchPage()
+        public SearchPage(string[] paths)
         {
             InitializeComponent();
-            
+            _existFiles = paths;
         }
       
-
-        private void DeleteAllPhotosInDirectory()
-        {
-            
-            DirectoryInfo di = new DirectoryInfo(catalog);
-            foreach (FileInfo file in di.GetFiles())
-            {
-                file.Delete();
-            }
-            foreach (DirectoryInfo dir in di.GetDirectories())
-            {
-                dir.Delete(true);
-            }
-        }
-
-
         private static string[] GetFilesFromDirectory()
         {
-            string[] FilesJpg = Directory.GetFiles(catalog, "*.jpg");
-            string[] FilesPng = Directory.GetFiles(catalog, "*.png");
+            string[] FilesJpg = Directory.GetFiles(SelectedCatalogs, "*.jpg");
+            string[] FilesPng = Directory.GetFiles(SelectedCatalogs, "*.png");
             return   FilesJpg.Concat(FilesPng).ToArray();
         }
 
         private async Task RunShell()
         {
-            
-            var command = Command.Run(Directory.GetCurrentDirectory() + "\\PythonScripts\\dist\\parse.exe", catalog, '"' + SearchTB.Text + '"');
-        
+            var command = Command.Run(Directory.GetCurrentDirectory() + "\\PythonScripts\\dist\\parse.exe", SelectedCatalogs, '"' + SearchTB.Text + '"');
             await command.Task;
-       
         }
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
+            
                 // Получение списка файлов из выбранной директории
                 var files = GetFilesFromDirectory();
+               
+
                 // Если в поле поиска введен текст
                 if (SearchTB.Text != "")
                 {
-                    // Если в директории есть файлы
-                    if (files.Length > 0)
-                    {
-                        // Вывод предупреждения о возможном удалении файлов
-                        MessageBoxButton button = MessageBoxButton.YesNoCancel;
-                        MessageBoxImage icon = MessageBoxImage.Warning;
-                        var result = MessageBox.Show("Удалить фотографии из этого каталога?", "Удаление фотографии", button, icon, MessageBoxResult.Yes);
-
-                        // В зависимости от выбора пользователя, удаляем файлы или нет
-                        switch (result)
-                        {
-                            case MessageBoxResult.Cancel:
-                                break;
-                            case MessageBoxResult.Yes:
-                                {
-                                    DeleteAllPhotosInDirectory();
-                                    break;
-                                }
-                            case MessageBoxResult.No:
-                                break;
-                        }
-                    }
                     // Отображаем элементы UI для отображения прогресса выполнения операции
                     ProgressGrid.Visibility = Visibility.Visible;
                     BeginBTN.IsEnabled = false;
@@ -107,28 +69,15 @@ namespace DiplomMark.Pages
                     MessageBox.Show("Нет фотографии в каталоге. Загрузите либо выполните запрос");
                     return;
                 }
-                // Переходим на страницу с изображениями
-                MainWindow.main.MainFrame.Navigate(new ImagesPage());
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            // Переходим на страницу с изображениями
 
-        }
-        public bool IsDirectoryEmpty(string path)
-        {
-            return !Directory.EnumerateFileSystemEntries(path).Any();
-        }
-        private void CatalogBtn_Click(object sender, RoutedEventArgs e)
-        {
-            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
-            dialog.InitialDirectory = catalog;
-            dialog.IsFolderPicker = true;
-            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-            {
-                catalog = dialog.FileName + "\\";
-            }
+            files = files.Where(x => !_existFiles.Contains(x)).ToArray();
+
+
+            MainWindow.main.MainFrame.Navigate(new ImagesPage(files));
+            
+           
+
         }
     }
 

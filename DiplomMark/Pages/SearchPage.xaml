@@ -177,16 +177,9 @@
                     <Label HorizontalAlignment="Center" Foreground="AliceBlue" VerticalAlignment="Center">Загрузка изоображений...</Label>
                 </Grid>
             </Grid>
-            <Button  Background="#151515" x:Name="CatalogBtn" Grid.Column="1" Grid.Row="1" Click="CatalogBtn_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="125" Margin="125 15 0 100" Height="25"  Cursor="Hand">
-                <Button.Resources>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="CornerRadius" Value="3"/>
-                    </Style>
-                </Button.Resources>
-                Выбрать каталог
-            </Button>
+            
         </StackPanel>
-        <Button x:Name="BeginBTN" Style="{StaticResource AnimationBTN}" Grid.Row="3" FontFamily="Roboto" Foreground="AliceBlue" Height="50" Width="200" Margin="197,17,179,18" Grid.Column="1" Click="Button_Click">Начать</Button>
+        <Button x:Name="BeginBTN" Style="{StaticResource AnimationBTN}" Grid.Row="3" FontFamily="Roboto" Foreground="AliceBlue" Height="50" Width="200"  Grid.Column="1" Click="Button_Click">Начать</Button>
         <ContentControl  Grid.Row="0" Grid.Column="1" Margin="0 0 0 30">
             <Image Height="150" Width="150" MaxHeight="200" MaxWidth="200" Source="/Resources/logo.png" HorizontalAlignment="Left"/>
         </ContentControl>

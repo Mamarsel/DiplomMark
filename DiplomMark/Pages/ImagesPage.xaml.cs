@@ -28,60 +28,18 @@ namespace DiplomMark.Pages
     {
         static List<SelectImages> images = new();
         static string[] filesImages;
-        public ImagesPage()
+        public ImagesPage(string[] paths)
         {
             InitializeComponent();
-
-            string[] FilesJpg = Directory.GetFiles(SearchPage.catalog, "*.jpg");
-            string[] FilesPng = Directory.GetFiles(SearchPage.catalog, "*.png");
-            filesImages = FilesJpg.Concat(FilesPng).ToArray();
-            foreach (var fi in filesImages)
-                images.Add(new SelectImages { SourceImage = BitmapFromUri(new Uri(fi)), URIToFile = fi, IsCheck = true });
-            GetResolutionAllImages(images);
-
-            images = SetResolutionAllImages(images);
-            imageResolution.Insert(0, new string("Все типы"));
-            imageResolution.ToList().ForEach(x => ResolutionsCB.Items.Add(x));
-
-
-            ResolutionsCB.SelectedIndex = 0;
+            //string[] FilesJpg = Directory.GetFiles(SearchPage.SelectedCatalogs, "*.jpg");
+            //string[] FilesPng = Directory.GetFiles(SearchPage.SelectedCatalogs, "*.png");
+            //filesImages = FilesJpg.Concat(FilesPng).ToArray();
+            foreach (var fi in paths)
+                images.Add(new SelectImages { SourceImage = BitmapFromUri(new Uri(fi)), URIToFile = fi, IsCheck = true }); 
             UpdateThumbnails(images);
            
         }
         List<String> imageResolution = new();
-        private void GetResolutionAllImages(List<SelectImages> image)
-        {
-            foreach (var file in image)
-            {
-                using (var fileStream = new FileStream(file.URIToFile, FileMode.Open, FileAccess.Read, FileShare.Read))
-                {
-                    using (var img = System.Drawing.Image.FromStream(fileStream, false, false))
-                    {
-                        //file.ImageWidth = img.Width;
-                        //file.ImageHeight = img.Height;
-                        if (!imageResolution.Contains($"{img.Width}x{img.Height}"))
-                        {
-                            imageResolution.Add($"{img.Width}x{img.Height}");
-                        }
-                    }
-                }
-            }
-        }
-        private List<SelectImages> SetResolutionAllImages(List<SelectImages> image)
-        {
-            foreach (var file in image)
-            {
-                using (var fileStream = new FileStream(file.URIToFile, FileMode.Open, FileAccess.Read, FileShare.Read))
-                {
-                    using (var img = System.Drawing.Image.FromStream(fileStream, false, false))
-                    {
-                        file.ImageWidth = img.Width;
-                        file.ImageHeight = img.Height;
-                    }
-                }
-            }
-            return image;
-        }
         public static ImageSource BitmapFromUri(Uri source)
         {
             var bitmap = new BitmapImage();
@@ -103,15 +61,20 @@ namespace DiplomMark.Pages
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
+            
+               
                 var deleteimage = images.Where(x => x.IsCheck == false).ToList();
                 images.RemoveAll(x => x.IsCheck == false);
                 RefreshThumb(deleteimage);
+                string[] strPaths = new string[images.Count-1];
                 Thumbnails.ItemsSource = images;
-                MainWindow.main.MainFrame.Navigate(new MainPage(images));
-            }
-            catch { }
+                for(int i = 0; i < images.Count-1; i++)
+                {
+                    strPaths[i] = images[i].URIToFile;
+                }
+
+                MainWindow.main.MainFrame.Navigate(new MainPage(strPaths));
+           
         }
 
         private void Thumbnails_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -156,21 +119,7 @@ namespace DiplomMark.Pages
         {
             Thumbnails.ItemsSource = null;
             Thumbnails.Items.Clear();
-            images = SetResolutionAllImages(images);
-            if (ResolutionsCB != null)
-                if (ResolutionsCB.SelectedIndex > 0)
-                {
-                    List<SelectImages> temp = new();
-                    foreach (var item in images)
-                    {
-                        if (($"{item.ImageWidth}x{item.ImageHeight}" == ResolutionsCB.SelectedItem.ToString()))
-                        {
-                            temp.Add(item);
-                        }
-                    }
-                    images = temp;
-
-                }
+            //images = SetResolutionAllImages(images);
             
            
             for (int i = 0; i < images.Count; i++)

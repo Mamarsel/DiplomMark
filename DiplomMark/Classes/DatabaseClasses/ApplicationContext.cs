@@ -11,6 +11,7 @@ namespace DiplomMark.Classes.DatabaseClasses
     public class ApplicationContext : DbContext
     {
         public DbSet<RecentProjects> RecentProject { get; set; } = null!;
+        public DbSet<SettingsUser> SettingsUser { get; set; } = null!;
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=helloapp.db");

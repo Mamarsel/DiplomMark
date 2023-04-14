@@ -14,10 +14,18 @@
 
   <ItemGroup>
     <None Remove="Resources\add-folder.png" />
+    <None Remove="Resources\AI.png" />
+    <None Remove="Resources\AIIcon.png" />
     <None Remove="Resources\correct.png" />
+    <None Remove="Resources\export.png" />
+    <None Remove="Resources\export1.png" />
+    <None Remove="Resources\fileAdd.png" />
     <None Remove="Resources\folder.png" />
     <None Remove="Resources\HomeIcon.png" />
+    <None Remove="Resources\icons8-save-64.png" />
+    <None Remove="Resources\iconsAddFile.png" />
     <None Remove="Resources\InconRect.png" />
+    <None Remove="Resources\leftIcon.png" />
     <None Remove="Resources\logo.png" />
     <None Remove="Resources\logo2.png" />
     <None Remove="Resources\new-folder.png" />
@@ -25,7 +33,9 @@
     <None Remove="Resources\PinkHomeIcon.png" />
     <None Remove="Resources\RectangleIcon.png" />
     <None Remove="Resources\remove.png" />
+    <None Remove="Resources\RightIcon.png" />
     <None Remove="Resources\save.png" />
+    <None Remove="Resources\saveall.png" />
     <None Remove="Resources\select.png" />
     <None Remove="Resources\SettingIcon.png" />
     <None Remove="Resources\trash.png" />
@@ -41,12 +51,20 @@
 
   <ItemGroup>
     <Resource Include="Resources\add-folder.png" />
+    <Resource Include="Resources\AI.png" />
+    <Resource Include="Resources\AIIcon.png" />
+    <Resource Include="Resources\export.png" />
+    <Resource Include="Resources\export1.png" />
+    <Resource Include="Resources\fileAdd.png" />
     <Resource Include="Resources\HomeIcon.png" />
     <Resource Include="Resources\folder.png" />
+    <Resource Include="Resources\icons8-save-64.png" />
+    <Resource Include="Resources\iconsAddFile.png" />
+    <Resource Include="Resources\leftIcon.png" />
     <Resource Include="Resources\PinkHomeIcon.png" />
     <Resource Include="Resources\new-folder.png" />
     <Resource Include="Resources\open.png" />
-    <Resource Include="Resources\save.png" />
+    <Resource Include="Resources\RightIcon.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -75,6 +93,10 @@
     <PackageReference Include="MedallionShell" Version="1.6.2" />
     <PackageReference Include="Microsoft-Windows10-APICodePack-Shell" Version="1.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.13.1" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.13.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
@@ -91,6 +113,8 @@
 
   <ItemGroup>
     <Resource Include="Resources\correct.png" />
+    <Resource Include="Resources\save.png" />
+    <Resource Include="Resources\saveall.png" />
     <Resource Include="Resources\SettingIcon.png" />
     <Resource Include="Resources\trash.png" />
   </ItemGroup>

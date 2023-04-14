@@ -33,7 +33,7 @@ namespace DiplomMark.Pages
         public WelcomePage()
         {
             InitializeComponent();
-            
+           
             db.Database.EnsureCreated();
             db.RecentProject.Load();
             DataContext = db.RecentProject.Local.ToObservableCollection();
@@ -72,7 +72,6 @@ namespace DiplomMark.Pages
                 {
                     db.RecentProject.Add(r);
                     db.SaveChanges();
-                    
                 }
             }
             UpdateLBAItem();
@@ -119,7 +118,7 @@ namespace DiplomMark.Pages
                     MessageBox.Show("Нет фотографии в каталоге");
                     return;
                 }
-                MainWindow.main.MainFrame.Navigate(new ImagesPage());
+                MainWindow.main.MainFrame.Navigate(new MainPage(files));
                
             }
         }

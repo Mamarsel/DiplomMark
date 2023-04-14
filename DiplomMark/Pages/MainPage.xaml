@@ -10,30 +10,91 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPage">
 
+    <Page.Resources>
+        <Style TargetType="Image" x:Key="AnimIcons">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Duration="0:0:0.400" To="34" Storyboard.TargetProperty="Height" >
+                                    <DoubleAnimation.EasingFunction>
+                                        <CircleEase EasingMode="EaseInOut" />
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Duration="0:0:0.400" To="34" Storyboard.TargetProperty="Width">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CircleEase EasingMode="EaseInOut" />
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Duration="0:0:0.150" To="30" Storyboard.TargetProperty="Height" />
+                                <DoubleAnimation Duration="0:0:0.150" To="30" Storyboard.TargetProperty="Width" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+    </Page.Resources>    
+    
+    
+    
     <Page.CommandBindings>
-        <CommandBinding Command="local:CustomCommands.Exit" CanExecute="CommandBinding_CanExecute" Executed="ExitCommand_Executed" />
-        <CommandBinding Command="local:CustomCommands.Save" CanExecute="CommandBinding_CanExecute_1" Executed="CommandBinding_Executed" />
+        <CommandBinding Command="local:CustomCommands.Exit" x:Name="ExitCommand" CanExecute="ExitCommand_CanExecute" Executed="ExitCommand_Executed_1" />
+        <CommandBinding Command="local:CustomCommands.Save" x:Name="SaveCommand" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed" />
     </Page.CommandBindings>
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="621*"/>
-            <ColumnDefinition Width="142*"/>
+            <ColumnDefinition Width="637*"/>
+            <ColumnDefinition Width="163*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="115*"/>
-            <RowDefinition Height="779*"/>
-            <RowDefinition Height="150"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="331*"/>
+            <RowDefinition Height="80*"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Background="#1f1f1f">
-            <Button  HorizontalAlignment="Right" Click="Button_Click" Cursor="Hand">
-                Разметить (ИИ)
-            </Button>
-            
-            
-        </Grid>
+     
 
+        <Grid Grid.Row="0" Background="#2B2B2B" Height="40" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Border BorderBrush="#333333"  BorderThickness="0,0,1,0" HorizontalAlignment="Left" >
+                <WrapPanel>
+                    <Image Style="{DynamicResource AnimIcons}" x:Name="BackPhotoImage" PreviewMouseDown="BackLabel_MouseDown" Width="30" Height="30" Source="/Resources/leftIcon.png" Margin="5">
+                    </Image>
+                    <Image Style="{DynamicResource AnimIcons}" x:Name="NextPhotoImage" PreviewMouseDown="NextPhotoImage_PreviewMouseDown" Width="30" Height="30" Source="/Resources/RightIcon.png" Margin="20 5 0 5">
+                    </Image>
+                </WrapPanel>
+            </Border>
+            <Border BorderBrush="#333333" BorderThickness="1,0,0,0" HorizontalAlignment="Right" >
+                <WrapPanel HorizontalAlignment="Right">
+                    <Image Style="{DynamicResource AnimIcons}" x:Name="ExportBTN" Source="/Resources/export1.png" Width="25" Height="25" Margin="5 5 5 3">
+                    </Image>
+                    <Image Style="{DynamicResource AnimIcons}" x:Name="SaveBTN" MouseDown="SaveAllBtn_PreviewMouseDown" Source="/Resources/save.png" Width="25" Height="30" Margin="5 5 5 3" >
+                    </Image>
+                    <Image Style="{DynamicResource AnimIcons}" x:Name="AIBTN" PreviewMouseDown="AIBTN_PreviewMouseDown" Source="/Resources/AI.png" Width="30" Height="30" Stretch="UniformToFill" Margin="5 0 0 0">
+                    </Image>
+                </WrapPanel>
+
+            </Border>
+            <Image MouseDown="NewPhotosImage_MouseDown" x:Name="NewPhotosImage"  Source="/Resources/iconsAddFile.png"  Style="{DynamicResource AnimIcons}" Width="30" Height="30" HorizontalAlignment="Center"/>
+
+
+        </Grid>
+        
+        
+        
+        
+        
         <Grid  Grid.Row="2" Grid.Column="2" Background="#FF3A3A3A">
             <Border BorderBrush="Black" BorderThickness="1">
                 <Grid>
@@ -54,47 +115,70 @@
 
             </Border>
         </Grid>
-
+        <Grid Height="40" Grid.Column="1" Grid.Row="0" Background="#1C1C1C">
+            <Label  VerticalContentAlignment="Center" HorizontalAlignment="Left" FontSize="15" Margin="5 0">Tags</Label>
+            <Label PreviewMouseDown="Label_PreviewMouseDown" HorizontalAlignment="Right" FontSize="20"  VerticalContentAlignment="Center">+</Label>
+        </Grid>
         <Grid  x:Name="GridDynamicElements" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" Background="#323232" >
-            <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True">
-                <ListBox  ItemsSource="{Binding }"  ItemContainerStyle="{StaticResource ListBoxItemStyle1}" SelectionMode="Single"  SelectionChanged="ListBox1_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="ListBoxAllElements">
+            
+                
+           
+                <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True">
+                <ListBox  ItemsSource="{Binding }" Focusable="True"  ItemContainerStyle="{StaticResource ListBoxItemStyle1}" SelectionMode="Single"  SelectionChanged="ListBox1_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="ListBoxAllElements">
+                    <ListBox.Template>
+                        <ControlTemplate TargetType="ItemsControl">
+                            <Border>
+                                <ItemsPresenter />
+                            </Border>
+                        </ControlTemplate>
+                    </ListBox.Template>
                     <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel >
+                            <ItemsPanelTemplate>
+                                <StackPanel >
 
 
-                            </StackPanel>
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
+                                </StackPanel>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
 
-                            <Grid Height="100" >
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="1*"></RowDefinition>
-                                    <RowDefinition Height="2*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"></ColumnDefinition>
-                                    <ColumnDefinition Width="1*"></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
+                                <!--<Grid Height="100" >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"></RowDefinition>
+                                        <RowDefinition Height="2*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
 
-                                <DockPanel Width="300" Grid.Column="0">
-                                    <Label  Grid.Column="0" Grid.Row="0"  Margin="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding Counter}"></Label>
+                                    <DockPanel Width="300" Grid.Column="0">
+                                        <Label  Grid.Column="0" Grid.Row="0"  Margin="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding Counter}"></Label>
+                                    </DockPanel>
+                                    <DockPanel Grid.Column="1">
+                                        <TextBox    HorizontalContentAlignment="Center"  Text="{Binding NameFigure}" TextChanged="NameFigureTB_TextChanged"  Grid.Column="1" MinWidth="50" Height="20" Grid.Row="0" HorizontalAlignment="Right"  x:Name="NameFigureTB"></TextBox>
+                                    </DockPanel>
+                                    <WrapPanel Grid.Row="1">
+                                        <Label Grid.Column="0" Grid.Row="1" Margin="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding TypeFigure}"></Label>
+                                    </WrapPanel>
+
+                                </Grid>-->
+                                    <Grid Background="{Binding TagColor}">
+                                <DockPanel Width="600" Grid.Column="0">
+                                    <Label Content="{Binding TagName}"></Label>
                                 </DockPanel>
                                 <DockPanel Grid.Column="1">
-                                    <TextBox    HorizontalContentAlignment="Center"  Text="{Binding NameFigure}" TextChanged="NameFigureTB_TextChanged"  Grid.Column="1" MinWidth="50" Height="20" Grid.Row="0" HorizontalAlignment="Right"  x:Name="NameFigureTB"></TextBox>
+                                    <TextBlock     Text="{Binding NameFigure}"   Grid.Column="1" MinWidth="50" FontSize="20" Height="20" Grid.Row="0" HorizontalAlignment="Right"  x:Name="NameFigureTB"> - </TextBlock>
                                 </DockPanel>
-                                <WrapPanel Grid.Row="1">
-                                    <Label Grid.Column="0" Grid.Row="1" Margin="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding TypeFigure}"></Label>
-                                </WrapPanel>
-
                             </Grid>
-                        </DataTemplate>
+                            </DataTemplate>
 
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </ScrollViewer>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+                
+            
         </Grid>
 
 
@@ -104,29 +188,10 @@
 
             </StackPanel>
         </Grid>
-        <WrapPanel  Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="35">
-            <Label Foreground="Black" FontSize="20" x:Name="BackLabel" MouseDown="BackLabel_MouseDown">&lt;</Label>
-            <Label Foreground="Black" FontSize="20" x:Name="CounterLabel" FontWeight="Bold" Content="1"  ></Label>
-            <Label Foreground="Black" FontSize="20">/</Label>
-            <Label Foreground="Black" FontSize="20" FontWeight="Bold" x:Name="MaxPhotosLabel">30</Label>
+      
+   
 
-            <Label Foreground="Black" FontSize="20" x:Name="LabelNext" MouseDown="LabelNext_MouseDown">&gt;</Label>
-
-        </WrapPanel>
-
-        <Grid Grid.Row="1" Grid.Column="0">
-            <StackPanel >
-                <Border Background="#373737" CornerRadius="5" Style="{StaticResource AnimBorders}" Width="50" Height="40" Margin="0 15">
-                    <Image Style="{StaticResource AnimImage}" Source="/Resources/select.png" Height="35" Width="35"></Image>
-                </Border>
-                
-                <Border  Style="{StaticResource AnimBorders}" Width="50" Height="40" CornerRadius="3" Margin="0 15">
-                    <Image x:Name="SaveAllBtn" PreviewMouseDown="SaveAllBtn_PreviewMouseDown" Style="{StaticResource AnimImage}" Source="/Resources/save.png" Height="35" Width="35"></Image>
-                </Border>
-            </StackPanel>
-        </Grid>
-
-        <local:ZoomBorder  Background="#191919"  ClipToBounds="True"  BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.Row="1">
+        <local:ZoomBorder  Background="#191919"  ClipToBounds="True"  BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="1">
             <Viewbox>
                 <Grid  x:Name="GridImage">
                     
@@ -136,7 +201,7 @@
 
                         </Image>
                     </Viewbox>
-                    <local:CustomCanvas LostFocus="Cnv_LostFocus"  Background="Transparent"  x:Name="Cnv">
+                    <local:CustomCanvas  Background="Transparent"  x:Name="Cnv">
 
                         
                     </local:CustomCanvas>
@@ -147,7 +212,7 @@
 
         <!--<Button Style="{StaticResource AnimationBTN}" x:Name="MarkBTN" Click="MarkBTN_Click" Grid.Column="2" Foreground="AliceBlue" Margin="71,32,70,33">Разметить</Button>-->
 
-        <ListBox VerticalContentAlignment="Center" Background="#323232"  ScrollViewer.CanContentScroll="False" ItemsSource="{Binding}" Grid.Row="2" Grid.Column="1" ItemContainerStyle="{StaticResource ListBoxItemStyleThumbNails}" Width="{Binding windowSize}" HorizontalAlignment="Stretch"  SelectionChanged="Thumbnails_SelectionChanged" Margin="10,10,37,10" Name="Thumbnails" >
+        <ListBox VerticalContentAlignment="Center" Background="#323232"  ScrollViewer.CanContentScroll="False" ItemsSource="{Binding}" Grid.Row="2" Grid.Column="0" ItemContainerStyle="{StaticResource ListBoxItemStyleThumbNails}" Width="{Binding windowSize}" HorizontalAlignment="Stretch"  SelectionChanged="Thumbnails_SelectionChanged" Margin="10,10,37,10" Name="Thumbnails" >
             <ListBox.Resources>
                 <Style TargetType="{x:Type ListView}">
                     <Style.Setters>
@@ -202,8 +267,8 @@
 
         </ListBox>
 
-        <Label Grid.Row="2" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="LVBack" MouseDown="LVBack_MouseDown" Height="40" Width="23">&lt;</Label>
-        <Label Grid.Row="2" Grid.Column="1" FontSize="25" HorizontalAlignment="Right"  VerticalAlignment="Center" x:Name="LvNext" MouseDown="LvNext_MouseDown" Height="40" Width="29"  >&gt;</Label>
+        <Label Grid.Row="2" Grid.Column="0" FontSize="25" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="LVBack" MouseDown="LVBack_MouseDown" Height="40" Width="23">&lt;</Label>
+        <Label Grid.Row="2" Grid.Column="0" FontSize="25" HorizontalAlignment="Right"  VerticalAlignment="Center" x:Name="LvNext" MouseDown="LvNext_MouseDown" Height="40" Width="29"  >&gt;</Label>
     </Grid>
 
 </Page>

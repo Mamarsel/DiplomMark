@@ -78,5 +78,10 @@ namespace DiplomMark
         {
             MainFrame.Navigate(new WelcomePage());
         }
+
+        private void Image_PreviewMouseDown_1(object sender, MouseButtonEventArgs e)
+        {
+            MainFrame.Navigate(new SettingsPage());
+        }
     }
 }

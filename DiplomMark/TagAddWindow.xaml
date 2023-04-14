@@ -1,0 +1,35 @@
+﻿<Window x:Class="DiplomMark.TagAddWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DiplomMark" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+         Style="{DynamicResource CustomWindowStyle}"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Title="TagAddWindow" Closed="Window_Closed" Height="300" Width="450">
+    <Grid>
+        <TextBlock Margin="50" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" Foreground="#818181">Create new tag</TextBlock>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBox Width="300"  Background="#303030" TextAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" x:Name="TagAddTB" Padding="0"  Height="50" FontFamily="Roboto">
+                <TextBox.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="5"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Height" Value="50"/>
+                    </Style>
+                </TextBox.Resources>
+            </TextBox>
+            <Grid HorizontalAlignment="Center"  >
+                <WrapPanel>
+                    <TextBlock Margin="5" FontSize="20" Foreground="#818181" VerticalAlignment="Top">Select color:</TextBlock>
+                    <xctk:ColorPicker Width="75" Background="#424242"  HeaderForeground="#FFEBEBEB"  TabForeground="#FFEBEBEB" Foreground="#FFEBEBEB" HeaderBackground="#363535" TabBackground="#363535" DropDownBackground="#292929"  
+                               ColorMode="ColorCanvas"  Height="25"  x:Name="SelectColorTag"/>
+                </WrapPanel>
+            </Grid>
+        </StackPanel>
+
+        <Button Margin="20" Style="{StaticResource AnimationBTN}" Grid.Row="3" FontFamily="Roboto" Foreground="AliceBlue" Height="50" Width="150" VerticalAlignment="Bottom" Grid.Column="1" Click="Button_Click">Начать</Button>
+    </Grid>
+</Window>
