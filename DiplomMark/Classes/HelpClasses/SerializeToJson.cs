@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DiplomMark.Classes.Figures;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace DiplomMark.Classes
+namespace DiplomMark.Classes.HelpClasses
 {
     public class SerializeToJson
     {

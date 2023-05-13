@@ -5,20 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace DiplomMark.Classes
+namespace DiplomMark.Classes.HelpClasses
 {
     public static class UIElementExtensions
     {
-        public static Int32 GetGroupID(DependencyObject obj)
+        public static int GetGroupID(DependencyObject obj)
         {
-            return (Int32)obj.GetValue(GroupIDProperty);
+            return (int)obj.GetValue(GroupIDProperty);
         }
 
-        public static void SetGroupID(DependencyObject obj, Int32 value)
+        public static void SetGroupID(DependencyObject obj, int value)
         {
             obj.SetValue(GroupIDProperty, value);
         }
         public static readonly DependencyProperty GroupIDProperty =
-            DependencyProperty.RegisterAttached("GroupID", typeof(Int32), typeof(UIElementExtensions), new UIPropertyMetadata(null));
+            DependencyProperty.RegisterAttached("GroupID", typeof(int), typeof(UIElementExtensions), new UIPropertyMetadata(null));
     }
 }

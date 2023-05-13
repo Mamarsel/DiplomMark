@@ -1,5 +1,5 @@
 ﻿using Aspose.Html.IO;
-using DiplomMark.Classes;
+using DiplomMark.Classes.HelpClasses;
 using System;
 using System.Collections.Generic;
 using System.IO;

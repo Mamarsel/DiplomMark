@@ -12,5 +12,6 @@ namespace DiplomMark.Classes.DatabaseClasses
         [Key]
         public int IdSetting { get; set; }  
         public string PathToONNXFile { get; set; }
+        public bool GuideViewAI { get; set; } = false;
     }
 }

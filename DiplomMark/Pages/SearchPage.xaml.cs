@@ -11,11 +11,11 @@ using System.Reflection;
 using System.Windows.Shapes;
 using System.Linq;
 using System.Security.Permissions;
-using DiplomMark.Classes;
 using Path = System.IO.Path;
 using Medallion.Shell;
 using System.Threading.Tasks;
 using System.Security.Policy;
+using DiplomMark.Classes.HelpClasses;
 
 namespace DiplomMark.Pages
 {

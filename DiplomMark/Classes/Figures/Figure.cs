@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace DiplomMark.Classes
+namespace DiplomMark.Classes.Figures
 {
     abstract public class Figure
     {
 
         public double Coord_X { get; set; }
         public double Coord_Y { get; set; }
-      
+
         public string NameFigure { get; set; }
 
         public string ToFileName { get; set; }
-       
+
         public Brush ColorFill { get; set; }
         public string TypeFigure { get; set; }
         [JsonIgnore]
@@ -30,6 +30,6 @@ namespace DiplomMark.Classes
         public double Height { get; set; }
         public double FigureOpacity { get; set; }
         public Brush StrokeFill { get; set; }
-        
+
     }
 }

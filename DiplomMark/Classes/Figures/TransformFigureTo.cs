@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Shapes;
 
-namespace DiplomMark.Classes
+namespace DiplomMark.Classes.Figures
 {
     public class TransformFigureTo
     {

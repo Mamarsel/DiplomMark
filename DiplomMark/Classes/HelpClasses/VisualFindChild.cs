@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows;
 
-namespace DiplomMark.Classes
+namespace DiplomMark.Classes.HelpClasses
 {
     public static class VisualFindChild
     {

@@ -6,6 +6,8 @@ using DiplomMark.Pages;
 using Image = System.Drawing.Image;
 using Color = System.Windows.Media.Color;
 using Rectangle = System.Windows.Shapes.Rectangle;
+using DiplomMark.Classes.HelpClasses;
+using DiplomMark.Classes.Figures;
 
 namespace DiplomMark.Classes.Yolo
 {
@@ -46,7 +48,6 @@ namespace DiplomMark.Classes.Yolo
                 Canvas.SetLeft(ShapeCurrent, x);
                 Canvas.SetTop(ShapeCurrent, y);
                 FiguresList.AddFigure(ShapeFigure.ShapeToFigure(ShapeCurrent, Math.Round(x, 4), Math.Round(y, 4), urlToFile, ShapeCurrent.Name, ShapeCurrent.Opacity, ShapeCurrent.Stroke));
-                MainPage.MainPageController.OpacitySlider.Value = ShapeCurrent.Opacity;
                 MainPage.MainPageController.RefreshListBox();
                 MainPage.MainPageController.Cnv.Children.Add(ShapeCurrent);
 

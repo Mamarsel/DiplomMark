@@ -5,25 +5,26 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using DiplomMark.Classes.Figures;
 
-namespace DiplomMark.Classes
+namespace DiplomMark.Classes.HelpClasses
 {
     public class ShapeFigure : Figure
     {
         public ShapeFigure(string name, double x, double y, string fileName, Brush colorFill, Shape rect, string typeFigure, double width, double height, double opacity, Brush StrokeFill)
         {
-            this.Coord_X = Math.Round(x, 4);
-            this.Coord_Y = Math.Round(y, 4);
-            this.NameFigure = name;
-            this.ToFileName = fileName;
-            this.ColorFill = colorFill;
-            this.TypeFigure = typeFigure;
-            this.ShapeFigure = rect;
-            this.Width = width;
-            this.Height = height;
-            this.FigureOpacity = opacity;
+            Coord_X = Math.Round(x, 4);
+            Coord_Y = Math.Round(y, 4);
+            NameFigure = name;
+            ToFileName = fileName;
+            ColorFill = colorFill;
+            TypeFigure = typeFigure;
+            ShapeFigure = rect;
+            Width = width;
+            Height = height;
+            FigureOpacity = opacity;
             this.StrokeFill = StrokeFill;
-            
+
         }
         public static ShapeFigure ShapeToFigure(Shape rect, double coord_x, double coord_y, string file_name, string name, double opacity, Brush StrokeFill)
         {

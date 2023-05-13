@@ -1,6 +1,6 @@
 ﻿using Aspose.Html.Dom.Events;
-using DiplomMark.Classes;
 using DiplomMark.Classes.DatabaseClasses;
+using DiplomMark.Classes.HelpClasses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
@@ -33,19 +33,21 @@ namespace DiplomMark.Pages
         public WelcomePage()
         {
             InitializeComponent();
-           
             db.Database.EnsureCreated();
             db.RecentProject.Load();
             DataContext = db.RecentProject.Local.ToObservableCollection();
+            if(db.SettingsUser.FirstOrDefault() == null)
+            {
+                
+                SettingsUser settings = new SettingsUser() { GuideViewAI = false, IdSetting = 1, PathToONNXFile = Directory.GetCurrentDirectory() + @"\Assets\Weights\yolov8m.onnx" };
+                db.SettingsUser.Add(settings);
+                db.SaveChanges();
+            }
             UpdateLBAItem();
         }
         private void UpdateLBAItem()
         {
             ListBoxAllElements.ItemsSource = db.RecentProject.OrderByDescending(x=>x.LastModify).ToList();
-        }
-        private void NewFolderGrid_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-
         }
         private static string[] GetFilesFromDirectory(string catalog)
         {
@@ -118,6 +120,7 @@ namespace DiplomMark.Pages
                     MessageBox.Show("Нет фотографии в каталоге");
                     return;
                 }
+               
                 MainWindow.main.MainFrame.Navigate(new MainPage(files));
                
             }

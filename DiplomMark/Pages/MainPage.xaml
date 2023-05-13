@@ -77,8 +77,6 @@
             </Border>
             <Border BorderBrush="#333333" BorderThickness="1,0,0,0" HorizontalAlignment="Right" >
                 <WrapPanel HorizontalAlignment="Right">
-                    <Image Style="{DynamicResource AnimIcons}" x:Name="ExportBTN" Source="/Resources/export1.png" Width="25" Height="25" Margin="5 5 5 3">
-                    </Image>
                     <Image Style="{DynamicResource AnimIcons}" x:Name="SaveBTN" MouseDown="SaveAllBtn_PreviewMouseDown" Source="/Resources/save.png" Width="25" Height="30" Margin="5 5 5 3" >
                     </Image>
                     <Image Style="{DynamicResource AnimIcons}" x:Name="AIBTN" PreviewMouseDown="AIBTN_PreviewMouseDown" Source="/Resources/AI.png" Width="30" Height="30" Stretch="UniformToFill" Margin="5 0 0 0">
@@ -106,11 +104,6 @@
                         <ColumnDefinition Width="22*"/>
                         <ColumnDefinition Width="63*"/>
                     </Grid.ColumnDefinitions>
-                    <Border  Grid.Column="0" Grid.Row="0" Background="{Binding BackgroundGrid}" BorderBrush="Black" BorderThickness="0.8" x:Name="PreviewColorBorder"></Border>
-                    <xctk:ColorPicker Background="#424242"  HeaderForeground="#FFEBEBEB"  TabForeground="#FFEBEBEB" Foreground="#FFEBEBEB" HeaderBackground="#363535" TabBackground="#363535" DropDownBackground="#292929"   FocusManager.FocusedElement="{Binding ElementName=ListBoxAllElements}" ColorMode="ColorCanvas"  Height="25"   x:Name="X12" SelectedColorChanged="X12_SelectedColorChanged"  Grid.Row="1"/>
-                    <Label  x:Name="NameFigure" FontFamily="Roboto" FontSize="18" FontWeight="Bold" Grid.ColumnSpan="2" Margin="88,0,0,31"></Label>
-                    <Slider Grid.Column="1" Grid.Row="1"  Margin="5" Maximum="1" x:Name="OpacitySlider" ValueChanged="OpacitySlider_ValueChanged" TickFrequency="0.1"></Slider>
-                    <Label Grid.Column="1" Grid.Row="1" Margin="25" Foreground="#444444" >Opacity</Label>
                 </Grid>
 
             </Border>
@@ -142,34 +135,12 @@
                         </ListBox.ItemsPanel>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-
-                                <!--<Grid Height="100" >
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="1*"></RowDefinition>
-                                        <RowDefinition Height="2*"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*"></ColumnDefinition>
-                                        <ColumnDefinition Width="1*"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-
-                                    <DockPanel Width="300" Grid.Column="0">
-                                        <Label  Grid.Column="0" Grid.Row="0"  Margin="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding Counter}"></Label>
-                                    </DockPanel>
-                                    <DockPanel Grid.Column="1">
-                                        <TextBox    HorizontalContentAlignment="Center"  Text="{Binding NameFigure}" TextChanged="NameFigureTB_TextChanged"  Grid.Column="1" MinWidth="50" Height="20" Grid.Row="0" HorizontalAlignment="Right"  x:Name="NameFigureTB"></TextBox>
-                                    </DockPanel>
-                                    <WrapPanel Grid.Row="1">
-                                        <Label Grid.Column="0" Grid.Row="1" Margin="5" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding TypeFigure}"></Label>
-                                    </WrapPanel>
-
-                                </Grid>-->
-                                    <Grid Background="{Binding TagColor}">
+                            <Grid Background="{Binding TagColor}">
                                 <DockPanel Width="600" Grid.Column="0">
                                     <Label Content="{Binding TagName}"></Label>
                                 </DockPanel>
                                 <DockPanel Grid.Column="1">
-                                    <TextBlock     Text="{Binding NameFigure}"   Grid.Column="1" MinWidth="50" FontSize="20" Height="20" Grid.Row="0" HorizontalAlignment="Right"  x:Name="NameFigureTB"> - </TextBlock>
+                                    <Image  Source="/Resources/trash.png"  Grid.Column="1" Width="20" Margin="0 0 5 0"  Height="20" Grid.Row="0" HorizontalAlignment="Right" MouseDown="NameFigureTB_MouseDown" PreviewMouseDown="NameFigureTB_PreviewMouseDown"  x:Name="NameFigureTB"></Image>
                                 </DockPanel>
                             </Grid>
                             </DataTemplate>

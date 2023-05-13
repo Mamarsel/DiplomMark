@@ -1,5 +1,5 @@
-﻿using DiplomMark.Classes;
-using DiplomMark.Classes.DatabaseClasses;
+﻿using DiplomMark.Classes.DatabaseClasses;
+using DiplomMark.Classes.HelpClasses;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;

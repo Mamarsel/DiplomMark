@@ -1,5 +1,4 @@
-﻿using DiplomMark.Classes;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,12 +9,16 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Figure = DiplomMark.Classes.Figure;
+using Figure = DiplomMark.Classes.Figures.Figure;
 using Image = System.Drawing.Image;
 using Color = System.Windows.Media.Color;
 using Rectangle = System.Windows.Shapes.Rectangle;
 using ColorConverter = System.Windows.Media.ColorConverter;
 using Point = System.Windows.Point;
+using DiplomMark.Classes.DatabaseClasses;
+using System.Linq.Expressions;
+using DiplomMark.Classes.HelpClasses;
+using DiplomMark.Classes.Figures;
 
 namespace DiplomMark.Pages
 {
@@ -71,6 +74,8 @@ namespace DiplomMark.Pages
             Thumbnails.SelectedIndex = 0;
             #endregion
             OpenToSave();
+            if(FiguresList.ListFigures.Count > 0)
+                AddTagsSave(FiguresList.ListFigures);
             MainPageController = this;
             ListBoxAllElements.Focus();
         }
@@ -79,8 +84,8 @@ namespace DiplomMark.Pages
         /// </summary>
         private void OpenToSave()
         {
-            String sPath_SubDirectory = SearchPage.SelectedCatalogs + "Saves";
-            if (Directory.Exists(sPath_SubDirectory) == false) return;
+            String sPath_SubDirectory = SearchPage.SelectedCatalogs + "\\" + "Saves";
+            if (Directory.Exists(sPath_SubDirectory) == false || Cnv.Children.Count > 0) return;
             if (File.Exists(sPath_SubDirectory + "\\saves.json"))
             {
                 string text = File.ReadAllText(sPath_SubDirectory + "\\saves.json");
@@ -90,12 +95,15 @@ namespace DiplomMark.Pages
                 var listrect = TransformFigureTo.ListToPrintShapes(RectangleShapesInPhoto);
                 PrintImagesInPhoto(RectangleShapesInPhoto, listrect);
                 RefreshListBox();
+
+
             }
         }
         private void AddTagsSave(List<Figure> figures)
         {
-            List<Figure> uniqueFigureNames = figures.Distinct().ToList();
-
+            var tagClasses = figures.Select(x=> new TagClass { TagColor = (SolidColorBrush)x.ColorFill, TagName = x.NameFigure}).DistinctBy(x=>x.TagName).ToList();
+            GlobalVars.Tags.AddRange(tagClasses);
+            ListBoxAllElements.ItemsSource = GlobalVars.Tags.DistinctBy(x=>x.TagName);
         }
         /// <summary>
         /// Добавление ссылок фотографии в List
@@ -149,12 +157,14 @@ namespace DiplomMark.Pages
         /// <param NameFigure="listrect">Лист со всеми фигурами</param>
         public void PrintImagesInPhoto(List<Figure> rectangleShapesInPhoto, List<Shape> listrect)
         {
+            Cnv.Children.Clear();
             foreach (var shapes in listrect)
             {
                 foreach (var figures in rectangleShapesInPhoto)
                 {
                     if (shapes.Width == figures.ShapeFigure.Width && shapes.Height == figures.ShapeFigure.Height && shapes.Name == figures.ShapeFigure.Name)
                     {
+                        
                         shapes.Opacity = figures.FigureOpacity;
                         shapes.Width = figures.ShapeFigure.Width;
                         shapes.Height = figures.ShapeFigure.Height;
@@ -234,12 +244,7 @@ namespace DiplomMark.Pages
                     //X12.SelectedColor = (Color)ColorConverter.ConvertFromString(colorValue);
                     TagClass myItem = (TagClass)_currentSelectedListBoxItem.DataContext;
                     GlobalVars.SelectedTag = myItem;
-                    NameFigure.Content = myItem.TagName;
-                    var list = FiguresList.ListFigures;
-                    foreach (var rect in list)
-                        if (rect.ShapeFigure.Name == myItem.TagName)
-                            OpacitySlider.Value = rect.ShapeFigure.Opacity;
-                }
+                    var list = FiguresList.ListFigures;             }
             }
             catch { }
         }
@@ -293,26 +298,10 @@ namespace DiplomMark.Pages
             }
 
         }
-        public  void AddElementToListBox(MyItem myItem)
-        {
-            ListBoxAllElements.Items.Add(myItem);
-        }
-        
+      
         private void OpacitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            //if (_currentSelectedListBoxItem != null)
-            //{
-            //    MyItem o = (MyItem)_currentSelectedListBoxItem.DataContext;
-            //    var itema = FiguresList.ListFigures;
-            //    foreach (var rect in itema)
-            //    {
-            //        if (rect.NameFigure == o.NameFigure)
-            //        {
-            //            rect.ShapeFigure.Opacity = OpacitySlider.Value;
-            //            rect.FigureOpacity = OpacitySlider.Value;
-            //        }
-            //    }
-            //}
+            
         }
         private void NameFigureTB_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -320,7 +309,7 @@ namespace DiplomMark.Pages
             if (textBox != null)
             {
                 string theText = textBox.Text;
-                NameFigure.Content = theText;
+             
                 MyItem myItem = (MyItem)_currentSelectedListBoxItem.DataContext;
                 myItem.NameFigure = theText;
                 var lists = FiguresList.ListFigures;
@@ -380,7 +369,6 @@ namespace DiplomMark.Pages
             {
                 Cnv.Children.Remove(ShapeFigures.Last());
                 FiguresList.ListFigures.Remove(RectangleShapesInPhoto.Last());
-                ListBoxAllElements.Items.RemoveAt(ListBoxAllElements.Items.Count - 1);
             }
         }
 
@@ -401,9 +389,15 @@ namespace DiplomMark.Pages
 
         private void AIBTN_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            _R = (byte)_rand.Next(1, 255);
-            _G = (byte)_rand.Next(1, 255);
-            _B = (byte)_rand.Next(1, 233);
+            using(var db = new ApplicationContext())
+            {
+                var x = db.SettingsUser.FirstOrDefault();
+                if(!x.GuideViewAI)
+                {
+                    MessageBox.Show("Нейросеть опирается на список ваших тегов.\nЕсли выделяемый объект есть в вашей коллекции тэгов, то он его выделяет");
+                    x.GuideViewAI = true;
+                }
+            }
             using var yolo = new Classes.Yolo.Models.Yolov8Net(Directory.GetCurrentDirectory() + @"\Assets\Weights\yolov8m.onnx");
             Image img = Image.FromFile(Paths[CounterImage - 1]);
             using var image = Image.FromFile(Paths[CounterImage - 1]);
@@ -412,34 +406,25 @@ namespace DiplomMark.Pages
             {
                 GroupIDCounter++;
                 var originalImageHeight = img.Height;
-                var originalImageWidth = img.Width;
-                var x = Math.Max(pred.Rectangle.X, 0);
-                var y = Math.Max(pred.Rectangle.Y, 0);
-                var width = Math.Min(originalImageWidth - x, pred.Rectangle.Width);
-                var height = Math.Min(originalImageHeight - y, pred.Rectangle.Height);
-                var name = pred.Label.Name.Replace(" ", "_");
-                var ShapeCurrent = new Rectangle();
+                var originalImageWidth  = img.Width;
+                var x                   = Math.Max(pred.Rectangle.X, 0);
+                var y                   = Math.Max(pred.Rectangle.Y, 0);
+                var width               = Math.Min(originalImageWidth - x, pred.Rectangle.Width);
+                var height              = Math.Min(originalImageHeight - y, pred.Rectangle.Height);
+                var name                = pred.Label.Name.Replace(" ", "_");
+                var tag                 = GlobalVars.Tags.FirstOrDefault(x => x.TagName == name);
+                var ShapeCurrent        = new Rectangle();
                 Canvas.SetLeft(ShapeCurrent, x);
                 Canvas.SetTop(ShapeCurrent, y);
-                ShapeCurrent.Width = width;
-                ShapeCurrent.Height = height;
-                ShapeCurrent.StrokeThickness = 2;
-                ShapeCurrent.Stroke = new SolidColorBrush(Color.FromRgb(_R, _G, _B));
-                ShapeCurrent.Fill = new SolidColorBrush(Color.FromArgb(40, _R, _B, _G));
-                ShapeCurrent.Name = name;
-                Canvas.SetLeft(ShapeCurrent, x);
-                Canvas.SetTop(ShapeCurrent, y);
-                TextBlock textblock = new();
-                Canvas.SetLeft(textblock, x);
-                Canvas.SetTop(textblock, y);
-                textblock.Text = name;
-                textblock.Name = name;
-                AddChild(ShapeCurrent, GroupIDCounter);
-                AddChild(textblock, GroupIDCounter);
-                FiguresList.AddFigure(ShapeFigure.ShapeToFigure(ShapeCurrent, Math.Round(x, 4), Math.Round(y, 4), Paths[CounterImage - 1], ShapeCurrent.Name, ShapeCurrent.Opacity, ShapeCurrent.Stroke));
-                OpacitySlider.Value = ShapeCurrent.Opacity;
-                RefreshListBox();
+                if(tag!= null)
+                {
+                    ShapeCurrent = new Rectangle { Width = width, Height = height, StrokeThickness = 2, Stroke = tag.TagColor, Fill = tag.TagColor, Name = name };
 
+                    Canvas.SetLeft(ShapeCurrent, x);
+                    Canvas.SetTop(ShapeCurrent, y);
+                    Cnv.Children.Add(ShapeCurrent);
+                    FiguresList.AddFigure(ShapeFigure.ShapeToFigure(ShapeCurrent, Math.Round(x, 4), Math.Round(y, 4), Paths[CounterImage - 1], ShapeCurrent.Name, ShapeCurrent.Opacity, ShapeCurrent.Stroke));
+                }
             }
         }
 
@@ -483,6 +468,42 @@ namespace DiplomMark.Pages
                 GlobalVars.IsWindowTagOpen = true;
             }
 
+        }
+
+        private void NameFigureTB_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            
+           
+        }
+
+        private void NameFigureTB_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                
+                    _currentSelectedListBoxItem = ListBoxAllElements.ItemContainerGenerator.ContainerFromIndex(ListBoxAllElements.SelectedIndex) as ListBoxItem;
+
+                if (_currentSelectedListBoxItem != null)
+                {
+                    TagClass myItem = _currentSelectedListBoxItem.DataContext as TagClass;
+
+                    if (myItem != null)
+                    {
+                        FiguresList.ListFigures.RemoveAll(x => x.NameFigure == myItem.TagName);
+                        Cnv.Children.Clear();
+                        FiguresList.ListFigures.ForEach(x => Cnv.Children.Add(x.ShapeFigure));
+                        
+                    }
+                    GlobalVars.Tags.Remove(myItem);
+                    ListBoxAllElements.SelectedItem = null;
+                    
+                    ListBoxAllElements.ItemsSource = null;
+                    ListBoxAllElements.ItemsSource = GlobalVars.Tags;
+                    ListBoxAllElements.Items.Refresh();
+                    GlobalVars.SelectedTag = null;
+                }
+            }
+            catch { }
         }
     }
 }

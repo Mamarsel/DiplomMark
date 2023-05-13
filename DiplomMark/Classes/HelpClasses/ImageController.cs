@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace DiplomMark.Classes
+namespace DiplomMark.Classes.HelpClasses
 {
     static class ImageController
     {
@@ -25,7 +25,7 @@ namespace DiplomMark.Classes
         }
         public static BitmapImage ToImage(byte[] array)
         {
-            using (var ms = new System.IO.MemoryStream(array))
+            using (var ms = new MemoryStream(array))
             {
                 BitmapImage image = new();
                 image.BeginInit();
@@ -71,9 +71,9 @@ namespace DiplomMark.Classes
                 mem.Position = 0;
                 image.BeginInit();
                 image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-                image.CacheOption   = BitmapCacheOption.OnLoad;
-                image.UriSource     = null;
-                image.StreamSource  = mem;
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.UriSource = null;
+                image.StreamSource = mem;
                 image.EndInit();
             }
             image.Freeze();
@@ -89,7 +89,7 @@ namespace DiplomMark.Classes
                 int width = img.PixelWidth;
                 int height = img.PixelHeight;
 
-                int stride = width * 4; 
+                int stride = width * 4;
                 byte[] pixelData = new byte[stride * height];
                 img.CopyPixels(pixelData, stride, 0);
 

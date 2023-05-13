@@ -9,8 +9,9 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows;
 using DiplomMark.Pages;
+using DiplomMark.Classes.Figures;
 
-namespace DiplomMark.Classes
+namespace DiplomMark.Classes.CustomElements
 {
     public class CustomCanvas : Canvas
     {
@@ -19,10 +20,8 @@ namespace DiplomMark.Classes
         public static Rectangle selectedRectangle;
         private Point currentMousePosition;
         private double _mouseDownDistanceThreshold = 2;
-        private  MainPage _main;
-
+        private MainPage _main;
         private static double _coordX, _coordY;
-
         Random r = new();
         int counter = 1;
         //static byte R;
@@ -30,21 +29,28 @@ namespace DiplomMark.Classes
         //static byte B;
         public CustomCanvas()
         {
-            this.Background = Brushes.White;
-            this.MouseLeftButtonDown += OnMouseLeftButtonDown;
-            this.MouseLeftButtonUp += OnMouseLeftButtonUp;
-            this.MouseMove += OnMouseMove;
-            this.PreviewMouseLeftButtonUp += OnPreviewMouseLeftButtonUp;
-            this.PreviewKeyDown += MainWindow_PreviewKeyDown;
+            Background = Brushes.White;
+            MouseLeftButtonDown += OnMouseLeftButtonDown;
+            MouseLeftButtonUp += OnMouseLeftButtonUp;
+            MouseMove += OnMouseMove;
+            PreviewMouseLeftButtonUp += OnPreviewMouseLeftButtonUp;
+            PreviewKeyDown += MainWindow_PreviewKeyDown;
         }
-
+        private void _checkSelectRect()
+        {
+            if (selectedRectangle != null)
+            {
+                selectedRectangle.Stroke = GlobalVars.Tags.FirstOrDefault(x => x.TagName == selectedRectangle.Name).TagColor;
+                selectedRectangle.Fill = GlobalVars.Tags.FirstOrDefault(x => x.TagName == selectedRectangle.Name).TagColor;
+                selectedRectangle.Fill.Opacity = 0.7;
+                selectedRectangle.StrokeThickness = 1;
+                selectedRectangle = null;
+            }
+        }
         private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (GlobalVars.SelectedTag == null)
                 return;
-            //R = (byte)r.Next(1, 255);
-            //G = (byte)r.Next(1, 255);
-            //B = (byte)r.Next(1, 233);
             _main = MainPage.MainPageController;
             startPoint = e.GetPosition(this);
             currentMousePosition = startPoint;
@@ -54,13 +60,7 @@ namespace DiplomMark.Classes
                 {
                     if (rectangle.ShapeFigure.IsMouseOver)
                     {
-                        if (selectedRectangle != null)
-                        {
-                            selectedRectangle.Stroke = GlobalVars.SelectedTag.TagColor;
-                            selectedRectangle.Fill = GlobalVars.SelectedTag.TagColor;
-                            selectedRectangle.Fill.Opacity = 0.4;
-                            selectedRectangle.StrokeThickness = 1;
-                        }
+                        _checkSelectRect();
                         selectedRectangle = (Rectangle)rectangle.ShapeFigure;
                         selectedRectangle.Fill = new SolidColorBrush(Color.FromArgb(125, 0, 0, 255));
                         selectedRectangle.StrokeThickness = 2;
@@ -70,28 +70,19 @@ namespace DiplomMark.Classes
             }
             else if (IsMouseOver && (Mouse.DirectlyOver is CustomCanvas || Mouse.DirectlyOver is Rectangle))
             {
+                _checkSelectRect();
                 counter++;
                 currentRectangle = new Rectangle
                 {
                     Stroke = GlobalVars.SelectedTag.TagColor,
                     StrokeThickness = 2,
                     Fill = GlobalVars.SelectedTag.TagColor,
-                    Opacity = 0.6,
+                    Opacity = 0.7,
                     Name = GlobalVars.SelectedTag.TagName
                 };
-                Canvas.SetLeft(currentRectangle, startPoint.X);
-                Canvas.SetTop(currentRectangle, startPoint.Y);
-                this.Children.Add(currentRectangle);
-                //_main.AddElementToListBox(
-                //    new MyItem
-                //    {
-                //        Counter = counter,
-                //        TypeFigure = $"{currentRectangle.GetType().Name.ToUpper()} SHAPE",
-                //        BackgroundGrid = currentRectangle.Fill,
-                //        FigureShape = currentRectangle,
-                //        NameFigure = currentRectangle.Name
-                //    });
-                //_main.ListBoxAllElements.SelectedIndex = _main.ListBoxAllElements.Items.Count - 1;
+                SetLeft(currentRectangle, startPoint.X);
+                SetTop(currentRectangle, startPoint.Y);
+                Children.Add(currentRectangle);
             }
         }
         private void OnMouseMove(object sender, MouseEventArgs e)
@@ -103,16 +94,21 @@ namespace DiplomMark.Classes
                 _coordY = Math.Min(startPoint.Y, currentMousePosition.Y);
                 currentRectangle.Width = Math.Abs(currentMousePosition.X - startPoint.X);
                 currentRectangle.Height = Math.Abs(currentMousePosition.Y - startPoint.Y);
-                Canvas.SetLeft(currentRectangle, _coordX);
-                Canvas.SetTop(currentRectangle, _coordY);
+                SetLeft(currentRectangle, _coordX);
+                SetTop(currentRectangle, _coordY);
             }
             else if (selectedRectangle != null && e.LeftButton == MouseButtonState.Pressed)
             {
                 currentMousePosition = e.GetPosition(this);
-                _coordX = currentMousePosition.X - startPoint.X + Canvas.GetLeft(selectedRectangle);
-                _coordY = currentMousePosition.Y - startPoint.Y + Canvas.GetTop(selectedRectangle);
-                Canvas.SetLeft(selectedRectangle, _coordX);
-                Canvas.SetTop(selectedRectangle, _coordY);
+                _coordX = currentMousePosition.X - startPoint.X + GetLeft(selectedRectangle);
+                _coordY = currentMousePosition.Y - startPoint.Y + GetTop(selectedRectangle);
+
+                var x = FiguresList.ListFigures.FirstOrDefault(x => x.ShapeFigure == selectedRectangle);
+                x.Coord_X = _coordX;
+                x.Coord_Y = _coordY;
+
+                SetLeft(selectedRectangle, _coordX);
+                SetTop(selectedRectangle, _coordY);
                 startPoint = currentMousePosition;
             }
 
@@ -124,14 +120,11 @@ namespace DiplomMark.Classes
                 if (currentRectangle.Width > _mouseDownDistanceThreshold || currentRectangle.Height > _mouseDownDistanceThreshold)
                 {
                     FiguresList.AddFigure(ShapeFigure.ShapeToFigure(currentRectangle, Math.Round(_coordX, 4), Math.Round(_coordY, 4), MainPage.Paths[MainPage.CounterImage - 1], currentRectangle.Name, currentRectangle.Opacity, currentRectangle.Stroke));
-                    _main.OpacitySlider.Value = currentRectangle.Opacity;
-                    MainPage.MainPageController.X12.SelectedColor = GlobalVars.SelectedTag.TagColor.Color;
-                    MainPage.MainPageController.PreviewColorBorder.Background = GlobalVars.SelectedTag.TagColor;
                     currentRectangle = null;
                 }
                 else
                 {
-                    this.Children.Remove(currentRectangle);
+                    Children.Remove(currentRectangle);
                 }
             }
         }
@@ -149,10 +142,10 @@ namespace DiplomMark.Classes
         }
         private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Delete && this.Children.Contains(selectedRectangle))
+            if (e.Key == Key.Delete && Children.Contains(selectedRectangle))
             {
-                this.Children.Remove(selectedRectangle);
-                FiguresList.ListFigures.Remove(FiguresList.ListFigures.FirstOrDefault(x=>x.ShapeFigure == selectedRectangle));
+                Children.Remove(selectedRectangle);
+                FiguresList.ListFigures.Remove(FiguresList.ListFigures.FirstOrDefault(x => x.ShapeFigure == selectedRectangle));
                 MainPage.MainPageController.RefreshListBox();
                 selectedRectangle = null;
             }

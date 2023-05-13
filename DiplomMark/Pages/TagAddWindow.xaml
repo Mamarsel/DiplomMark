@@ -12,12 +12,12 @@
     <Grid>
         <TextBlock Margin="50" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" Foreground="#818181">Create new tag</TextBlock>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBox Width="300"  Background="#303030" TextAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" x:Name="TagAddTB" Padding="0"  Height="50" FontFamily="Roboto">
+            <TextBox Width="300"  Background="#303030" TextAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" x:Name="TagAddTB" Padding="0"  Height="30" FontFamily="Roboto">
                 <TextBox.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="5"/>
                         <Setter Property="VerticalAlignment" Value="Center"/>
-                        <Setter Property="Height" Value="50"/>
+                        <Setter Property="Height" Value="30"/>
                     </Style>
                 </TextBox.Resources>
             </TextBox>

@@ -1,5 +1,5 @@
 ﻿using Aspose.Html.Dom.Css;
-using DiplomMark.Classes;
+using DiplomMark.Classes.HelpClasses;
 using DiplomMark.Pages;
 using System;
 using System.Collections.Generic;
@@ -33,11 +33,12 @@ namespace DiplomMark
             
             if (String.IsNullOrEmpty(TagAddTB.Text) || SelectColorTag.SelectedColor.Value == null)
                 return;
-
             Color myColor = SelectColorTag.SelectedColor.Value;
             TagClass tag = new TagClass { TagColor = new SolidColorBrush(Color.FromArgb(40, (byte)myColor.R, (byte)myColor.G, (byte)myColor.B)), TagName = TagAddTB.Text };
             GlobalVars.Tags.Add(tag);
-            MainPage.MainPageController.ListBoxAllElements.Items.Add(tag);
+
+            MainPage.MainPageController.ListBoxAllElements.ItemsSource = null;
+            MainPage.MainPageController.ListBoxAllElements.ItemsSource = GlobalVars.Tags;
             MainPage.MainPageController.ListBoxAllElements.SelectedIndex = MainPage.MainPageController.ListBoxAllElements.Items.Count - 1;
             this.Close();
 

@@ -6,13 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace DiplomMark.Classes
+namespace DiplomMark.Classes.HelpClasses
 {
     public class TagClass
     {
         public string TagName { get; set; }
-        public SolidColorBrush TagColor { get; set;}
+        public SolidColorBrush TagColor { get; set; }
 
-        
+
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace DiplomMark.Classes
+namespace DiplomMark.Classes.CustomElements
 {
     public static class CustomCommands
     {

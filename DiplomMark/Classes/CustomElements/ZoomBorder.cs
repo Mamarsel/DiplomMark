@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows;
 
-namespace DiplomMark.Classes
+namespace DiplomMark.Classes.CustomElements
 {
     public class ZoomBorder : Border
     {
@@ -36,15 +36,15 @@ namespace DiplomMark.Classes
             get { return base.Child; }
             set
             {
-                if (value != null && value != this.Child)
-                    this.Initialize(value);
+                if (value != null && value != Child)
+                    Initialize(value);
                 base.Child = value;
             }
         }
 
         public void Initialize(UIElement element)
         {
-            this.child = element;
+            child = element;
             if (child != null)
             {
                 TransformGroup group = new TransformGroup();
@@ -54,11 +54,11 @@ namespace DiplomMark.Classes
                 group.Children.Add(tt);
                 child.RenderTransform = group;
                 child.RenderTransformOrigin = new Point(0.0, 0.0);
-                this.MouseWheel += child_MouseWheel;
-                this.MouseLeftButtonDown += child_MouseLeftButtonDown;
-                this.MouseLeftButtonUp += child_MouseLeftButtonUp;
-                this.MouseMove += child_MouseMove;
-                this.PreviewMouseRightButtonDown += new MouseButtonEventHandler(
+                MouseWheel += child_MouseWheel;
+                MouseLeftButtonDown += child_MouseLeftButtonDown;
+                MouseLeftButtonUp += child_MouseLeftButtonUp;
+                MouseMove += child_MouseMove;
+                PreviewMouseRightButtonDown += new MouseButtonEventHandler(
               child_PreviewMouseRightButtonDown);
             }
         }
@@ -116,7 +116,7 @@ namespace DiplomMark.Classes
                     var tt = _getTranslateTransform(child);
                     start = e.GetPosition(this);
                     origin = new Point(tt.X, tt.Y);
-                    this.Cursor = Cursors.Hand;
+                    Cursor = Cursors.Hand;
                     child.CaptureMouse();
                 }
             }
@@ -127,20 +127,20 @@ namespace DiplomMark.Classes
             if (child != null)
             {
                 child.ReleaseMouseCapture();
-                this.Cursor = Cursors.Arrow;
+                Cursor = Cursors.Arrow;
             }
         }
 
         void child_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            this.Reset();
+            Reset();
         }
 
         private void child_MouseMove(object sender, MouseEventArgs e)
         {
             if (child != null)
             {
-                if (child.IsMouseCaptured )
+                if (child.IsMouseCaptured)
                 {
                     var tt = _getTranslateTransform(child);
                     Vector v = start - e.GetPosition(this);

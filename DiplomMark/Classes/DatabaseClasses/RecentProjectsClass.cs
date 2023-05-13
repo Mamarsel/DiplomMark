@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiplomMark.Classes
+namespace DiplomMark.Classes.DatabaseClasses
 {
     public class RecentProjectsClass
     {
