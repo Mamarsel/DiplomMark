@@ -31,7 +31,7 @@ namespace DiplomMark.Pages
                 var x = db.SettingsUser.First();
                 OnnxTB.Text = x.PathToONNXFile;
             }
-           
+
         }
 
         private void Image_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -46,14 +46,14 @@ namespace DiplomMark.Pages
             };
             dialog.Filters.Add(filter);
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-            { 
-               OnnxTB.Text = dialog.FileName;
-               using(var db = new ApplicationContext())
-               {
+            {
+                OnnxTB.Text = dialog.FileName;
+                using (var db = new ApplicationContext())
+                {
                     var x = db.SettingsUser.FirstOrDefault(x => x.IdSetting == 1);
                     x.PathToONNXFile = dialog.FileName;
                     db.SaveChanges();
-               }
+                }
             }
 
         }

@@ -10,6 +10,7 @@ using System.Windows.Shapes;
 using System.Windows;
 using DiplomMark.Pages;
 using DiplomMark.Classes.Figures;
+using DiplomMark.Classes.HelpClasses;
 
 namespace DiplomMark.Classes.CustomElements
 {

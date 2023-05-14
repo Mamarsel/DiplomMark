@@ -1,22 +1,14 @@
-﻿using Aspose.Html.IO;
+﻿
 using DiplomMark.Classes.HelpClasses;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Image = System.Windows.Controls.Image;
 
 namespace DiplomMark.Pages
@@ -31,13 +23,10 @@ namespace DiplomMark.Pages
         public ImagesPage(string[] paths)
         {
             InitializeComponent();
-            //string[] FilesJpg = Directory.GetFiles(SearchPage.SelectedCatalogs, "*.jpg");
-            //string[] FilesPng = Directory.GetFiles(SearchPage.SelectedCatalogs, "*.png");
-            //filesImages = FilesJpg.Concat(FilesPng).ToArray();
             foreach (var fi in paths)
-                images.Add(new SelectImages { SourceImage = BitmapFromUri(new Uri(fi)), URIToFile = fi, IsCheck = true }); 
+                images.Add(new SelectImages { SourceImage = BitmapFromUri(new Uri(fi)), URIToFile = fi, IsCheck = true });
             UpdateThumbnails(images);
-           
+
         }
         List<String> imageResolution = new();
         public static ImageSource BitmapFromUri(Uri source)
@@ -56,25 +45,22 @@ namespace DiplomMark.Pages
             foreach (var fi in images)
             {
                 File.Delete(fi.URIToFile);
-                
+
             }
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            
-               
-                var deleteimage = images.Where(x => x.IsCheck == false).ToList();
-                images.RemoveAll(x => x.IsCheck == false);
-                RefreshThumb(deleteimage);
-                string[] strPaths = new string[images.Count-1];
-                Thumbnails.ItemsSource = images;
-                for(int i = 0; i < images.Count-1; i++)
-                {
-                    strPaths[i] = images[i].URIToFile;
-                }
+            var deleteimage = images.Where(x => x.IsCheck == false).ToList();
+            images.RemoveAll(x => x.IsCheck == false);
+            RefreshThumb(deleteimage);
+            string[] strPaths = new string[images.Count - 1];
+            Thumbnails.ItemsSource = images;
+            for (int i = 0; i < images.Count - 1; i++)
+            {
+                strPaths[i] = images[i].URIToFile;
+            }
 
-                MainWindow.main.MainFrame.Navigate(new MainPage(strPaths));
-           
+            MainWindow.main.MainFrame.Navigate(new MainPage(strPaths));
         }
 
         private void Thumbnails_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -119,9 +105,7 @@ namespace DiplomMark.Pages
         {
             Thumbnails.ItemsSource = null;
             Thumbnails.Items.Clear();
-            //images = SetResolutionAllImages(images);
-            
-           
+
             for (int i = 0; i < images.Count; i++)
             {
                 Thumbnails.ItemsSource = images;

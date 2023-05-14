@@ -348,15 +348,6 @@ namespace DiplomMark.Pages
         {
             e.CanExecute = true;
         }
-        public void AddChild(UIElement element, Int32 groupID)
-        {
-            try
-            {
-                UIElementExtensions.SetGroupID(element, groupID);
-                Cnv.Children.Add(element);
-            }
-            catch { }
-        }
         private void ExitCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
@@ -398,7 +389,7 @@ namespace DiplomMark.Pages
                     x.GuideViewAI = true;
                 }
             }
-            using var yolo = new Classes.Yolo.Models.Yolov8Net(Directory.GetCurrentDirectory() + @"\Assets\Weights\yolov8m.onnx");
+            using var yolo = new Classes.Yolo.Models.PredictiorHelper(Directory.GetCurrentDirectory() + @"\Assets\Weights\yolov8m.onnx");
             Image img = Image.FromFile(Paths[CounterImage - 1]);
             using var image = Image.FromFile(Paths[CounterImage - 1]);
             var predictions = yolo.Predict(img);
