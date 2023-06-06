@@ -52,10 +52,10 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <StackPanel Grid.Row="0" Grid.Column="1">
-            <CheckBox x:Name="CbCheck" IsChecked="True" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="15" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked">Выбрать все</CheckBox>
+            <CheckBox x:Name="CbCheck" IsChecked="True" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="15" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked">Select All</CheckBox>
             
             
         </StackPanel>
-        <Button Style="{StaticResource AnimationBTN}" Grid.Row="3" FontFamily="Roboto" Foreground="AliceBlue" Height="50" Width="150" VerticalAlignment="Bottom" Grid.Column="1" Click="Button_Click">Начать</Button>
+        <Button Style="{StaticResource AnimationBTN}" Grid.Row="3" FontFamily="Roboto" Foreground="AliceBlue" Height="50" Width="150" VerticalAlignment="Bottom" Grid.Column="1" Click="Button_Click">Begin</Button>
     </Grid>
 </Page>

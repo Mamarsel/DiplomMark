@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:DiplomMark.Classes"
+      xmlns:local="clr-namespace:DiplomMark.Classes.CustomElements"
       xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
       xmlns:self ="clr-namespace:DiplomMark.Pages" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       mc:Ignorable="d" 
@@ -201,27 +201,26 @@
 
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
-            <!--<ListBox.ItemTemplate>
+            <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border VerticalAlignment="Center" BorderThickness="0.5" MaxHeight="100" MaxWidth="125" BorderBrush="#404040" CornerRadius="5">
 
                         <Grid VerticalAlignment="Center" >
 
-                            --><!-- Rounded mask (stretches to fill Grid) --><!--
                             <Border  Name="mask" Background="White" CornerRadius="7"/>
 
-                            --><!-- Main content container --><!--
+                            
                             <StackPanel VerticalAlignment="Center">
 
-                                --><!-- Use a VisualBrush of 'mask' as the opacity mask --><!--
+                                
                                 <StackPanel.OpacityMask>
                                     <VisualBrush Visual="{Binding ElementName=mask}"/>
                                 </StackPanel.OpacityMask>
 
-                                --><!-- Any content --><!--
+                          
                                 <Image RenderOptions.BitmapScalingMode="Fant" Stretch="Fill" x:Name="ListboxImagePagination" VerticalAlignment="Center"  Margin="5">
                                     <Image.Source>
-                                        <BitmapImage DecodePixelWidth="100" DecodePixelHeight="100"  />
+                                        <BitmapImage DecodePixelWidth="100" DecodePixelHeight="100" UriSource="{Binding }"  />
                                     </Image.Source>
                                 </Image>
 
@@ -234,7 +233,7 @@
 
 
                 </DataTemplate>
-            </ListBox.ItemTemplate>-->
+            </ListBox.ItemTemplate>
 
         </ListBox>
 

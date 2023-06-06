@@ -22,14 +22,14 @@
                 </TextBox.Resources>
             </TextBox>
             <Grid HorizontalAlignment="Center"  >
-                <WrapPanel>
+                <WrapPanel Margin="0,18,0,-18">
                     <TextBlock Margin="5" FontSize="20" Foreground="#818181" VerticalAlignment="Top">Select color:</TextBlock>
                     <xctk:ColorPicker Width="75" Background="#424242"  HeaderForeground="#FFEBEBEB"  TabForeground="#FFEBEBEB" Foreground="#FFEBEBEB" HeaderBackground="#363535" TabBackground="#363535" DropDownBackground="#292929"  
                                ColorMode="ColorCanvas"  Height="25"  x:Name="SelectColorTag"/>
                 </WrapPanel>
             </Grid>
         </StackPanel>
-
-        <Button Margin="20" Style="{StaticResource AnimationBTN}" Grid.Row="3" FontFamily="Roboto" Foreground="AliceBlue" Height="50" Width="150" VerticalAlignment="Bottom" Grid.Column="1" Click="Button_Click">Начать</Button>
+     
+        <Button Margin="20" Style="{StaticResource AnimationBTN}" Grid.Row="3" FontFamily="Roboto" Foreground="AliceBlue" Height="50" Width="150" VerticalAlignment="Bottom" Grid.Column="1" Click="Button_Click">Create</Button>
     </Grid>
 </Window>

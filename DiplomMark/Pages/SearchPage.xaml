@@ -141,7 +141,7 @@
 
         </Grid>
         <StackPanel Grid.Column="1" Grid.Row="1">
-            <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="30" FontFamily="Roboto Light" Height="54"  Width="572" TextWrapping="Wrap" TextAlignment="Center"  >Введите запрос и мы подберем для вас фотографии!</TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="30" FontFamily="Roboto Light" Height="54"  Width="572" TextWrapping="Wrap" TextAlignment="Center"  >Enter a request and we will select photos for you!</TextBlock>
 
             <Grid x:Name="InputGrid" Visibility="Visible">
 
@@ -159,7 +159,7 @@
                 
                 
 
-                <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="DarkGray" Text="Ваш запрос.." Grid.Row="1">
+                <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="DarkGray" Text="Enter a request.." Grid.Row="1">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Visibility" Value="Collapsed"></Setter>
@@ -174,12 +174,12 @@
 
                 <Grid x:Name="ProgressGrid" Visibility="Hidden">
                     <ProgressBar Minimum="0" Maximum="100" Margin="120 0" Value="30" Height="50" Name="pbStatus" IsIndeterminate="True" />
-                    <Label HorizontalAlignment="Center" Foreground="AliceBlue" VerticalAlignment="Center">Загрузка изоображений...</Label>
+                    <Label HorizontalAlignment="Center" Foreground="AliceBlue" VerticalAlignment="Center">Downloading...</Label>
                 </Grid>
             </Grid>
             
         </StackPanel>
-        <Button x:Name="BeginBTN" Style="{StaticResource AnimationBTN}" Grid.Row="3" FontFamily="Roboto" Foreground="AliceBlue" Height="50" Width="200"  Grid.Column="1" Click="Button_Click">Начать</Button>
+        <Button x:Name="BeginBTN" Style="{StaticResource AnimationBTN}" Grid.Row="3" FontFamily="Roboto" Foreground="AliceBlue" Height="50" Width="200"  Grid.Column="1" Click="Button_Click">Begin</Button>
         <ContentControl  Grid.Row="0" Grid.Column="1" Margin="0 0 0 30">
             <Image Height="150" Width="150" MaxHeight="200" MaxWidth="200" Source="/Resources/logo.png" HorizontalAlignment="Left"/>
         </ContentControl>

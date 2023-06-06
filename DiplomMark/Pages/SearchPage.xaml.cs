@@ -47,36 +47,38 @@ namespace DiplomMark.Pages
         }
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            
-                // Получение списка файлов из выбранной директории
-                var files = GetFilesFromDirectory();
-               
 
-                // Если в поле поиска введен текст
-                if (SearchTB.Text != "")
-                {
-                    // Отображаем элементы UI для отображения прогресса выполнения операции
-                    ProgressGrid.Visibility = Visibility.Visible;
-                    BeginBTN.IsEnabled = false;
-                    // Запускаем выполнение командной строки в асинхронном режиме
-                    await RunShell();
-                }
-                // Получаем список файлов из директории
-                files = GetFilesFromDirectory();
-                // Если список файлов пустой, выводим сообщение об этом
-                if (files.Length == 0)
-                {
-                    MessageBox.Show("Нет фотографии в каталоге. Загрузите либо выполните запрос");
-                    return;
-                }
+
+
+            // Получение списка файлов из выбранной директории
+            var files = GetFilesFromDirectory();
+
+
+            // Если в поле поиска введен текст
+            if (SearchTB.Text != "")
+            {
+                // Отображаем элементы UI для отображения прогресса выполнения операции
+                ProgressGrid.Visibility = Visibility.Visible;
+                BeginBTN.IsEnabled = false;
+                // Запускаем выполнение командной строки в асинхронном режиме
+                await RunShell();
+            }
+            // Получаем список файлов из директории
+            files = GetFilesFromDirectory();
+            // Если список файлов пустой, выводим сообщение об этом
+            if (files.Length == 0)
+            {
+                MessageBox.Show("Нет фотографии в каталоге. Загрузите либо выполните запрос");
+                return;
+            }
             // Переходим на страницу с изображениями
 
             files = files.Where(x => !_existFiles.Contains(x)).ToArray();
 
 
             MainWindow.main.MainFrame.Navigate(new ImagesPage(files));
-            
-           
+
+
 
         }
     }
